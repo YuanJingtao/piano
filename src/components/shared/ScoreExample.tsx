@@ -125,7 +125,9 @@ export default function ScoreExample({
             }
             return note;
           });
-          Formatter.FormatAndDraw(context, stave, staveNotes);
+          // autoBeam：相邻八分音符按拍自动连符杠（ti-ti 的标准记谱形态，#41）；
+          // 其余时值无影响（Beam 仅作用于八分及更短音符）。
+          Formatter.FormatAndDraw(context, stave, staveNotes, true);
         }
         return stave;
       });

@@ -11,10 +11,12 @@ import { registerTechnique } from "@/domain/registry";
 import directionIntervalsPlugin from "./direction-intervals";
 import keyboardGeographyPlugin from "./keyboard-geography";
 import landmarkNotesPlugin from "./landmark-notes";
+import rhythmReadingPlugin from "./rhythm-reading";
 
 // 注册顺序 = 课程树主线呈现顺序（listTechniques 按注册序枚举）：键盘地理是主线第一站。
 registerTechnique(keyboardGeographyPlugin);
 registerTechnique(landmarkNotesPlugin);
 registerTechnique(directionIntervalsPlugin);
-// 主线其余技巧落地后在此追加（#41 节奏 / #42 五指位置）：
-// registerTechnique(rhythmReadingPlugin); ...
+registerTechnique(rhythmReadingPlugin);
+// 主线其余技巧落地后在此追加（#42 五指位置 …）：
+// registerTechnique(fiveFingerPositionPlugin); ...

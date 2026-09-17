@@ -1,2 +1,12 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+
+/* 限时模式逐题倒计时收缩条（PracticeStage，#41）：宽度 100% → 0，时长 = 关卡时限。 */
+@keyframes timed-bar-shrink {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}

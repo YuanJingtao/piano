@@ -1,0 +1,214 @@
+# 节奏阅读基础:谱面的时间格子
+
+到目前为止,你学过的识谱都在回答「弹哪个键」——地标音、方向与音程,全是**音高**的事。但一首曲子光有音高还弹不成:同一个音,什么时候弹、弹多长,决定了它是庄严的进行曲还是轻快的小步舞曲。这就是识谱的另一半——**节奏**。
+
+好消息是:节奏比音高**好入门**。音高要记住五线谱上几十个位置,而首版节奏只需要认四种「时间格子」,再给它们起个名字。本技巧学完,你能看着一小节 4/4 谱面念出它的节奏音节,也能只听示范就认出谱面。
+
+本技巧的谱例都画在五线谱**中间那条线**上(B 的位置)——因为我们只看音符的**形状**(时值),不关心音高,所以全部音符统一画在中线上,这是节奏教学的标准写法。
+
+## 一、拍:音乐的心跳
+
+节奏的度量单位是**拍**:音乐里均匀重复的心跳。你听进行曲时忍不住跟着点头的那个稳定脉动,就是拍。
+
+首版内容全部是 **4/4 拍**——最常见的拍号,流行、古典、儿歌绝大多数都是它。含义很直白:**每小节数 4 拍,四分音符算 1 拍**。谱面上的小节就是一根根竖线(小节线)隔出的格子,每格恰好装下 4 拍:
+
+<ScoreExample
+  notes={[
+    { midi: 71, duration: "q" },
+    { midi: 71, duration: "q" },
+    { midi: 71, duration: "q" },
+    { midi: 71, duration: "q" },
+  ]}
+  clef="treble"
+  timeSignature="4/4"
+  width={420}
+  className="mx-auto"
+/>
+
+<div className="not-prose my-4 flex justify-center">
+  <PlayRhythmButton beats={[1, 1, 1, 1]} label="▶ 听:稳定的四拍(1 拍 1 秒)" />
+</div>
+
+示范用的点击声是**无音高**的短促打击声——节奏训练要你把注意力完全放在「时间」上,不被音高带走。点上面的按钮听:四声点击,间隔均匀,每声正好 1 秒。跟着它点头或拍手,这就是「一拍一秒」的感觉。
+
+## 二、时值家族:全、二分、四分
+
+音符的**形状**决定它占几拍,这个「占几拍」叫**时值**。首版只有四个成员,先认识三个长的:
+
+**四分音符**(1 拍)——实心符头加符干,最常见的心跳单位。四个四分音符正好装满一小节 4/4(上面刚见过)。
+
+**二分音符**(2 拍)——空心符头加符干,时长是四分音符的两倍。一小节装两个:
+
+<ScoreExample
+  notes={[
+    { midi: 71, duration: "h" },
+    { midi: 71, duration: "h" },
+  ]}
+  clef="treble"
+  timeSignature="4/4"
+  width={420}
+  className="mx-auto"
+/>
+
+<div className="not-prose my-4 flex justify-center">
+  <PlayRhythmButton beats={[2, 2]} label="▶ 听:两个二分音符" />
+</div>
+
+**全音符**(4 拍)——只有一个空心符头,没有符干,整个小节就它一个音,唱满 4 拍:
+
+<ScoreExample
+  notes={[{ midi: 71, duration: "w" }]}
+  clef="treble"
+  timeSignature="4/4"
+  width={420}
+  className="mx-auto"
+/>
+
+<div className="not-prose my-4 flex justify-center">
+  <PlayRhythmButton beats={[4]} label="▶ 听:全音符(整整 4 拍)" />
+</div>
+
+时值当然可以混搭——只要**每小节加起来等于 4 拍**。比如下面这小节:二分(2 拍)+ 四分(1 拍)+ 四分(1 拍),念作「长——、哒、哒」:
+
+<ScoreExample
+  notes={[
+    { midi: 71, duration: "h" },
+    { midi: 71, duration: "q" },
+    { midi: 71, duration: "q" },
+  ]}
+  clef="treble"
+  timeSignature="4/4"
+  width={420}
+  className="mx-auto"
+/>
+
+<div className="not-prose my-4 flex justify-center">
+  <PlayRhythmButton beats={[2, 1, 1]} label="▶ 听:二分 + 四分 + 四分" />
+</div>
+
+## 三、Kodály 音节:给节奏起名字
+
+看谱认时值只是眼睛的事;要把节奏**念出来、唱出来**,才能像儿歌一样内化(「声音先于符号」,和地标音的听音环节同一个道理)。全世界音乐课堂最通行的节奏唱名是 **Kodály(柯达伊)音节**:按时值给每个音符一个音节,像给节奏配歌词。
+
+首版的四个音节:
+
+<table>
+  <thead>
+    <tr>
+      <th>音符</th>
+      <th>时值</th>
+      <th>Kodály 音节</th>
+      <th>怎么念</th>
+      <th>听一听</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>四分音符</td>
+      <td>1 拍</td>
+      <td><strong>ta</strong></td>
+      <td>短促一声「哒」</td>
+      <td><PlayRhythmButton beats={[1]} label="▶" /></td>
+    </tr>
+    <tr>
+      <td>二分音符</td>
+      <td>2 拍</td>
+      <td><strong>ta-a</strong></td>
+      <td>「哒——」拖一拍</td>
+      <td><PlayRhythmButton beats={[2]} label="▶" /></td>
+    </tr>
+    <tr>
+      <td>全音符</td>
+      <td>4 拍</td>
+      <td><strong>ta-a-a-a</strong></td>
+      <td>「哒————」拖满整小节</td>
+      <td><PlayRhythmButton beats={[4]} label="▶" /></td>
+    </tr>
+    <tr>
+      <td>八分音符对</td>
+      <td>半拍 × 2</td>
+      <td><strong>ti-ti</strong></td>
+      <td>轻快两声「踢踢」</td>
+      <td><PlayRhythmButton beats={[0.5, 0.5]} label="▶" /></td>
+    </tr>
+  </tbody>
+</table>
+
+延长音节的横杠就是拖长的拍数,一目了然。用音节把上面那小节「二分 + 四分 + 四分」念出来:**ta-a ta ta**。
+
+## 四、ti-ti:把一拍对半切
+
+第四个成员是**八分音符**:实心符头、符干加一面小旗,时值是四分音符的一半——**半拍**。两个八分音符正好凑回 1 拍,记谱时几乎总是成对出现,小旗连成一根**符杠**:
+
+<ScoreExample
+  notes={[
+    { midi: 71, duration: "q" },
+    { midi: 71, duration: "8" },
+    { midi: 71, duration: "8" },
+    { midi: 71, duration: "q" },
+    { midi: 71, duration: "q" },
+  ]}
+  clef="treble"
+  timeSignature="4/4"
+  width={420}
+  className="mx-auto"
+/>
+
+这一小节念作 **ta ti-ti ta ta**(1 + 0.5 + 0.5 + 1 + 1 = 4 拍)。对比着听最清楚——同样 4 拍,「四分版」和「ti-ti 版」:
+
+<div className="not-prose my-4 flex flex-wrap justify-center gap-3">
+  <PlayRhythmButton beats={[1, 1, 1, 1]} label="▶ ta ta ta ta" />
+  <PlayRhythmButton beats={[1, 0.5, 0.5, 1, 1]} label="▶ ta ti-ti ta ta" />
+</div>
+
+听到区别了吗?ti-ti 像小跑,ta 像走路。符杠就是把「小跑的两步」绑在一起的记号:看到连着的两个八分音符,直接念「ti-ti」,不用一个一个数。
+
+## 五、听音环节:先听,后看
+
+和地标音一样,节奏的根基也是「声音先于符号」。建议这样练:
+
+1. **盲听念音节**:点开下面的按钮,先**不看谱**,跟着点击声把音节念出来(哒、哒、哒————…);
+2. **听长辨短**:重点体会全音符/二分音符的「拖长」和 ti-ti 的「小跑」,长音要占满它的拍数,心里默数;
+3. **看谱验证**:念完再对照下面的谱面检查——你念的和谱面一致吗?
+
+<div className="not-prose my-4 flex flex-wrap gap-3">
+  <PlayRhythmButton beats={[1, 1, 2]} label="▶ 练习 1" />
+  <PlayRhythmButton beats={[1, 0.5, 0.5, 1, 1]} label="▶ 练习 2" />
+  <PlayRhythmButton beats={[2, 0.5, 0.5, 1]} label="▶ 练习 3" />
+  <PlayRhythmButton beats={[0.5, 0.5, 0.5, 0.5, 1, 1]} label="▶ 练习 4" />
+</div>
+
+<ScoreExample
+  staves={[
+    { notes: [{ midi: 71, duration: "q" }, { midi: 71, duration: "q" }, { midi: 71, duration: "h" }] },
+    { notes: [{ midi: 71, duration: "q" }, { midi: 71, duration: "8" }, { midi: 71, duration: "8" }, { midi: 71, duration: "q" }, { midi: 71, duration: "q" }] },
+    { notes: [{ midi: 71, duration: "h" }, { midi: 71, duration: "8" }, { midi: 71, duration: "8" }, { midi: 71, duration: "q" }] },
+    { notes: [{ midi: 71, duration: "8" }, { midi: 71, duration: "8" }, { midi: 71, duration: "8" }, { midi: 71, duration: "8" }, { midi: 71, duration: "q" }, { midi: 71, duration: "q" }] },
+  ]}
+  clef="treble"
+  width={460}
+  className="mx-auto"
+/>
+
+答案从上到下:ta ta ta-a / ta ti-ti ta ta / ta-a ti-ti ta / ti-ti ti-ti ta ta。
+
+## 六、限时模式:压力握在自己手里
+
+配套练习是**选择·匹配题**,两种题型:
+
+- **看谱选音节**:给你一小节谱面,从四个音节串里选出正确的那个;
+- **听节奏选谱面**:只播点击声,从四小节日谱里选出你听到的节奏型。
+
+不要求你弹、也不判你打得准不准——首版专注把「时值认知」练扎实(时序判分留作以后迭代)。
+
+每关还提供一个**限时模式开关**(仅节奏关卡有,默认关闭):打开后每题附加响应时限(L1/L2 为 8 秒,L3 为 10 秒),超时记为错题、轮次照常继续。限时轮的成绩会单独记录,进入**个人排行榜**——和昨天的自己较劲。开不开、什么时候开,完全由你决定:先在不限时里练到从容,再打开限时练流畅,是更舒服的路径。
+
+## 配套练习
+
+学完教程,到左侧课程树里依次完成本技巧的三个关卡:
+
+- **L1 全·二分·四分音符**——长时值词汇,先把「拖几拍」练稳;
+- **L2 ti-ti 八分音符对**——加入一拍对半切的小跑;
+- **L3 混合时值阅读**——全部四种时值混合出题。
+
+每轮 10 题,正确率达到 80% 即通过;未达标整轮重来,答错的节奏型会以更高权重再次出现。出题瞬间会播放点击声示范——先靠耳朵、再靠眼睛,和地标音快答一样,这是刻意设计的脚手架,放心用。三关全部通过后,本技巧毕业,主线的下一站(五指位置与三和弦)随之解锁。

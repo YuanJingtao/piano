@@ -3,6 +3,7 @@ import type { ComponentType } from "react";
 import DirectionIntervalsTutorial from "@/plugins/direction-intervals/tutorial.mdx";
 import KeyboardGeographyTutorial from "@/plugins/keyboard-geography/tutorial.mdx";
 import LandmarkNotesTutorial from "@/plugins/landmark-notes/tutorial.mdx";
+import RhythmReadingTutorial from "@/plugins/rhythm-reading/tutorial.mdx";
 
 /**
  * 教程页注册表（内容层）：技巧 id → MDX 教程组件，每技巧一行（ADR 0007 口径）。
@@ -16,4 +17,5 @@ export const tutorials: Record<string, ComponentType> = {
   "keyboard-geography": KeyboardGeographyTutorial,
   "landmark-notes": LandmarkNotesTutorial,
   "direction-intervals": DirectionIntervalsTutorial,
+  "rhythm-reading": RhythmReadingTutorial,
 };

@@ -82,6 +82,8 @@ export default function PracticeStage({
   const [phase, setPhase] = useState<Phase>({ kind: "idle" });
   const [history, setHistory] = useState<History>([]);
   const [starting, setStarting] = useState(false);
+  /** 限时模式开关（ADR 0003：用户可选，默认关闭）；仅 timeLimitMs 关卡展示。 */
+  const [timedMode, setTimedMode] = useState(false);
 
   const roundRef = useRef<Round | null>(null);
   /** 同关卡加权错题池：内存态，重来/复习轮传递，达标即弃（ADR 0004）。 */
@@ -89,17 +91,32 @@ export default function PracticeStage({
   /** 反馈展示期间锁定作答（连击两次只记第一次；disabled 渲染前的竞态兜底）。 */
   const lockedRef = useRef(false);
   const advanceTimerRef = useRef<number | null>(null);
+  /** 限时模式逐题倒计时；非限时轮不 arm。 */
+  const limitTimerRef = useRef<number | null>(null);
   const payloadRef = useRef<SettlementPayload | null>(null);
 
   useEffect(
     () => () => {
       if (advanceTimerRef.current !== null) window.clearTimeout(advanceTimerRef.current);
+      if (limitTimerRef.current !== null) window.clearTimeout(limitTimerRef.current);
     },
     [],
   );
 
   const tutorialHref = `/techniques/${techniqueId}`;
   const isQuick = level.pass.maxMedianResponseMs !== undefined;
+  const canTime = level.timeLimitMs !== undefined;
+  /** 首版仅节奏关卡声明 timeLimitMs（ADR 0003），可限时关卡即选择·匹配题关卡。 */
+  const isChoice = !isQuick && canTime;
+  /**
+   * 当轮生效的关卡定义：限时开关关闭时剥掉 timeLimitMs——Round 引擎与结算快照
+   * （buildSettlementPayload → practice_session.time_limit_ms）都以它为准，
+   * 限时轮与非限时轮因此天然分开落库（ADR 0003/0006）。
+   */
+  const effectiveLevel = useMemo<LevelDef>(
+    () => (canTime && !timedMode ? { ...level, timeLimitMs: undefined } : level),
+    [level, canTime, timedMode],
+  );
 
   function clearAdvanceTimer() {
     if (advanceTimerRef.current !== null) {
@@ -108,26 +125,58 @@ export default function PracticeStage({
     }
   }
 
+  function clearLimitTimer() {
+    if (limitTimerRef.current !== null) {
+      window.clearTimeout(limitTimerRef.current);
+      limitTimerRef.current = null;
+    }
+  }
+
+  /** 签发新题 + （限时轮）arm 逐题倒计时。 */
+  function issueQuestion(question: Question, index: number) {
+    clearLimitTimer();
+    const limitMs = effectiveLevel.timeLimitMs;
+    if (limitMs !== undefined) {
+      limitTimerRef.current = window.setTimeout(() => {
+        limitTimerRef.current = null;
+        handleTimeout(limitMs);
+      }, limitMs);
+    }
+    setPhase({ kind: "question", question, index, answer: null, judgement: null, responseMs: null });
+  }
+
   function beginRound() {
     clearAdvanceTimer();
     try {
-      const round = new Round({ level, plugin, mistakePool: mistakePoolRef.current });
+      const round = new Round({ level: effectiveLevel, plugin, mistakePool: mistakePoolRef.current });
       const first = round.next();
       if (!first) return; // questionCount ≥ 1 的关卡不会走到
       roundRef.current = round;
       lockedRef.current = false;
       setHistory([]);
-      setPhase({
-        kind: "question",
-        question: first.question,
-        index: first.index,
-        answer: null,
-        judgement: null,
-        responseMs: null,
-      });
+      issueQuestion(first.question, first.index);
     } catch (err) {
       console.error("[practice] 开局失败：", err);
     }
+  }
+
+  /**
+   * 限时模式逐题超时（ADR 0003）：Round.timeout() 记错题（responseMs = 时限值）、
+   * 轮次继续；不调用插件 judge（没有真实作答可判），反馈文案为引擎级通用超时提示。
+   */
+  function handleTimeout(limitMs: number) {
+    if (lockedRef.current) return;
+    const round = roundRef.current;
+    if (!round) return;
+    lockedRef.current = true;
+    round.timeout();
+    setHistory((h) => [...h, false]);
+    setPhase((p) =>
+      p.kind === "question"
+        ? { ...p, judgement: { ok: false, feedback: "⏰ 超时，记为错题" }, responseMs: limitMs }
+        : p,
+    );
+    advanceTimerRef.current = window.setTimeout(advance, NEXT_DELAY_WRONG_MS);
   }
 
   /** 「开始」点击手势内同步调用 start()：AudioContext 解锁绑定本手势（AC1）。 */
@@ -156,14 +205,7 @@ export default function PracticeStage({
       settleRound();
       return;
     }
-    setPhase({
-      kind: "question",
-      question: next.question,
-      index: next.index,
-      answer: null,
-      judgement: null,
-      responseMs: null,
-    });
+    issueQuestion(next.question, next.index);
   }
 
   function handleAnswer(event: AnswerEvent) {
@@ -171,6 +213,7 @@ export default function PracticeStage({
     const round = roundRef.current;
     if (!round || phase.kind !== "question" || phase.judgement !== null) return;
     lockedRef.current = true;
+    clearLimitTimer();
 
     const judgement = round.submit(event);
     const responseMs = round.lastResponseMs() ?? 0;
@@ -185,10 +228,12 @@ export default function PracticeStage({
   function settleRound() {
     const round = roundRef.current;
     if (!round) return;
+    clearLimitTimer();
     const result = round.settle();
     // 达标 → nextMistakePool 为空（池即弃）；未达标 → 重来轮带入加权（ADR 0004）。
     mistakePoolRef.current = result.nextMistakePool;
-    payloadRef.current = buildSettlementPayload({ techniqueId, level, result });
+    // effectiveLevel：限时轮带 timeLimitMs 快照，非限时轮为 null（ADR 0003/0006）。
+    payloadRef.current = buildSettlementPayload({ techniqueId, level: effectiveLevel, result });
     setPhase({ kind: "settling", result });
     void submitSettlement(result);
   }
@@ -236,11 +281,24 @@ export default function PracticeStage({
       </h1>
       <span
         className={`rounded-full px-2 py-0.5 text-xs font-medium ${
-          isQuick ? "bg-sky-50 text-sky-700" : "bg-violet-50 text-violet-700"
+          isQuick
+            ? "bg-sky-50 text-sky-700"
+            : isChoice
+              ? "bg-teal-50 text-teal-700"
+              : "bg-violet-50 text-violet-700"
         }`}
       >
-        {isQuick ? `快答 · ${level.questionCount} 题` : `弹奏 · ${level.questionCount} 题`}
+        {isQuick
+          ? `快答 · ${level.questionCount} 题`
+          : isChoice
+            ? `选择匹配 · ${level.questionCount} 题`
+            : `弹奏 · ${level.questionCount} 题`}
       </span>
+      {canTime && timedMode && (
+        <span className="rounded-full bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700">
+          ⏱ 限时 {Math.round((level.timeLimitMs ?? 0) / 1000)}s/题
+        </span>
+      )}
     </div>
   );
 
@@ -262,8 +320,16 @@ export default function PracticeStage({
             </p>
           )}
           <p className="mt-2 text-sm text-neutral-500">
-            点击「开始」将同时解锁音频；每题出题瞬间会播放目标音高——先听再认，凭耳朵作答是预期行为。
+            点击「开始」将同时解锁音频；每题出题瞬间会播放
+            {isChoice ? "节奏点击声示范" : "目标音高"}——先听再认，凭耳朵作答是预期行为。
           </p>
+          {canTime && (
+            <TimedModeToggle
+              limitMs={level.timeLimitMs ?? 0}
+              enabled={timedMode}
+              onToggle={() => setTimedMode((v) => !v)}
+            />
+          )}
           <button
             type="button"
             onClick={handleStart}
@@ -287,6 +353,17 @@ export default function PracticeStage({
       <div className="mx-auto max-w-3xl px-5 py-10 lg:px-10">
         {header}
         <div className="rounded-lg border border-neutral-200 bg-white p-6 shadow-sm lg:p-8">
+          {effectiveLevel.timeLimitMs !== undefined && phase.judgement === null && (
+            <div className="mb-4 h-1.5 w-full overflow-hidden rounded-full bg-neutral-200" aria-hidden>
+              <div
+                key={phase.index}
+                className="h-full rounded-full bg-amber-500"
+                style={{
+                  animation: `timed-bar-shrink ${effectiveLevel.timeLimitMs}ms linear forwards`,
+                }}
+              />
+            </div>
+          )}
           <div className="mb-4 flex items-center justify-between gap-3">
             <span className="text-sm tabular-nums text-neutral-500">
               第 {phase.index + 1}/{level.questionCount} 题
@@ -311,7 +388,7 @@ export default function PracticeStage({
                   : "text-red-700"
             }`}
           >
-            {feedback ?? "听声音，在钢琴上按出这个音"}
+            {feedback ?? (isChoice ? "听示范 + 看题面，选出正确的选项" : "听声音，在钢琴上按出这个音")}
           </p>
         </div>
       </div>
@@ -368,6 +445,16 @@ export default function PracticeStage({
           </p>
         )}
 
+        {canTime && (
+          <div className="w-full max-w-md text-left">
+            <TimedModeToggle
+              limitMs={level.timeLimitMs ?? 0}
+              enabled={timedMode}
+              onToggle={() => setTimedMode((v) => !v)}
+            />
+          </div>
+        )}
+
         <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
           {!result.passed && (
             <>
@@ -408,6 +495,49 @@ export default function PracticeStage({
           </Link>
         </div>
       </div>
+    </div>
+  );
+}
+
+/**
+ * 限时模式开关（ADR 0003：用户可选、默认关闭；仅节奏关卡渲染）。
+ * idle 与 settled 两处展示——轮次进行中不可切换（一轮一个口径，限时轮独立落库）。
+ */
+function TimedModeToggle({
+  limitMs,
+  enabled,
+  onToggle,
+}: {
+  limitMs: number;
+  enabled: boolean;
+  onToggle: () => void;
+}) {
+  const seconds = Math.round(limitMs / 1000);
+  return (
+    <div className="mt-5 flex items-start justify-between gap-4 rounded-md border border-neutral-200 bg-neutral-50 px-4 py-3">
+      <div className="text-sm">
+        <p className="font-medium text-neutral-800">限时模式（可选）</p>
+        <p className="mt-0.5 text-xs leading-5 text-neutral-500">
+          启用后每题时限 {seconds} 秒，超时记为错题、轮次继续；限时成绩单独计入个人排行榜。
+          默认关闭，压力由自己掌控。
+        </p>
+      </div>
+      <button
+        type="button"
+        role="switch"
+        aria-checked={enabled}
+        aria-label="限时模式"
+        onClick={onToggle}
+        className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${
+          enabled ? "bg-amber-500" : "bg-neutral-300"
+        }`}
+      >
+        <span
+          className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-all ${
+            enabled ? "left-[22px]" : "left-0.5"
+          }`}
+        />
+      </button>
     </div>
   );
 }
