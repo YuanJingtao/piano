@@ -11,6 +11,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # lockfile 卫生守卫：resolved URL 必须指向公共 registry。
+      # 本地 npm 若配置了内网镜像（如 anpm），npm install 会把镜像 host 写入
+      # package-lock.json；GitHub runner 无法访问内网 → npm ci 全量 ETIMEDOUT
+      # 挂起 ~8min 后以 "Exit handler never called!" 崩溃，且真实错误被掩盖。
+      # 本地安装不受影响：npm 默认 replace-registry-host=npmjs 会在抓取时
+      # 自动将 npmjs.org 替换为所配置的镜像。
+      - name: Lockfile registry guard
+        run: |
+          bad=$(grep '"resolved":' package-lock.json | grep -v '"resolved": "https://registry.npmjs.org/' | head -5 || true)
+          if [ -n "$bad" ]; then
+            echo "::error::package-lock.json 含非 npmjs.org 的 resolved URL（本地内网镜像写入了 lockfile）"
+            echo "$bad"
+            echo "修复：npm install --package-lock-only --registry=https://registry.npmjs.org"
+            exit 1
+          fi
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
