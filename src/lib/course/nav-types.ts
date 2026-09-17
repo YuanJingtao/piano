@@ -3,11 +3,15 @@
  * 由 nav-view.ts 在服务端从注册表 manifest + LevelProgress 派生状态合并而成。
  */
 
+import type { BestScore } from "@/lib/persistence/contracts";
+
 export type CourseNavLevel = {
   id: string;
   title: string;
   unlocked: boolean;
   passed: boolean;
+  /** 最佳成绩快照（练习页复习轮展示用，#38）；无结算记录为 null。 */
+  best: BestScore | null;
 };
 
 export type CourseNavTechnique = {

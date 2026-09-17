@@ -2,8 +2,10 @@
  * 领域内核类型：技巧插件窄接口 + Round 引擎数据流。
  *
  * 纯 TypeScript，无 DOM / DB / 浏览器 API 依赖（seam 1 的测试底座）。
- * 插件窄接口四件套：samplePool / render / interact / judge；
- * 其中 render 与 interact 属浏览器层，此处仅作类型契约。
+ * 插件内容差异点四件（ADR 0007）：题池采样空间 / 题目渲染 / 作答交互 / 判定——
+ * 其中纯逻辑两件（samplePool / judge）由本接口约束；
+ * 浏览器两件（渲染 + 作答交互）落为插件目录的 React 题面组件 stage.tsx
+ * （契约见 src/components/training/types.ts，按题型注册），#38 训练闭环形态确定。
  */
 
 /** 题目：插件产出的 JSON 可序列化对象；`type` 为判别字段，其余字段由技巧自定义。 */
@@ -51,17 +53,14 @@ export type TechniqueManifest = {
 };
 
 /**
- * 技巧插件窄接口：类型即契约。
- * 流程规则全部在核心 Round 引擎；插件只实现四个内容差异点。
+ * 技巧插件窄接口：类型即契约（纯逻辑两件）。
+ * 流程规则全部在核心 Round 引擎；题目渲染与作答交互（浏览器两件）
+ * 由插件目录的 stage.tsx React 组件承担（#38 定形，见 QuestionStageProps）。
  */
 export interface TechniquePlugin {
   manifest: TechniqueManifest;
   /** 题池采样空间：供核心抽取，返回该关全部候选题。 */
   samplePool(level: LevelDef): Question[];
-  /** 题目渲染（浏览器层；seam 1 不覆盖）。 */
-  render(q: Question): void;
-  /** 作答交互（浏览器层；seam 1 不覆盖），返回统一作答事件。 */
-  interact(): Promise<AnswerEvent>;
   /** 判定：ok + 行内反馈内容。 */
   judge(q: Question, a: AnswerEvent): Judgement;
 }

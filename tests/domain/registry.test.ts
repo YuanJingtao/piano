@@ -11,8 +11,6 @@ function fakePlugin(id: string): TechniquePlugin {
   return {
     manifest: { id, title: `fake-${id}`, track: "main", prerequisites: [], levels: [] },
     samplePool: () => [{ type: "fake" }],
-    render: () => {},
-    interact: () => Promise.reject(new Error("fake")),
     judge: () => ({ ok: true, feedback: "✓" }),
   };
 }
