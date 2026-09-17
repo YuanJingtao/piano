@@ -123,12 +123,8 @@ export const rhythmReadingManifest: TechniqueManifest = {
   id: "rhythm-reading",
   title: "节奏阅读基础",
   track: "main",
-  /**
-   * 主线顺序为 … → 方向与音程阅读 → 节奏阅读基础（CONTEXT.md 主线）。
-   * 方向与音程（#40）与本票并行开发、尚未注册，按 #37 地标音先例暂以无前置起步，
-   * #40 合入后改回 prerequisites: ["direction-intervals"]（进度派生已兼容该调整）。
-   */
-  prerequisites: [],
+  /** 主线顺序为 … → 方向与音程阅读（#40）→ 节奏阅读基础（CONTEXT.md 主线）。 */
+  prerequisites: ["direction-intervals"],
   levels: [
     {
       id: "L1",

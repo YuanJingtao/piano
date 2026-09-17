@@ -8,6 +8,7 @@
  * 课程树从注册表枚举渲染，示例技巧不属于课程内容；其测试显式注册。
  */
 import { registerTechnique } from "@/domain/registry";
+import directionIntervalsPlugin from "./direction-intervals";
 import keyboardGeographyPlugin from "./keyboard-geography";
 import landmarkNotesPlugin from "./landmark-notes";
 import rhythmReadingPlugin from "./rhythm-reading";
@@ -15,8 +16,7 @@ import rhythmReadingPlugin from "./rhythm-reading";
 // 注册顺序 = 课程树主线呈现顺序（listTechniques 按注册序枚举）：键盘地理是主线第一站。
 registerTechnique(keyboardGeographyPlugin);
 registerTechnique(landmarkNotesPlugin);
+registerTechnique(directionIntervalsPlugin);
 registerTechnique(rhythmReadingPlugin);
-// 主线其余技巧落地后在此追加（#40 方向与音程 / #42 五指位置）：
-// registerTechnique(directionIntervalsPlugin); ...
-// 教学顺序 = 注册顺序；#40 合入后把 direction-intervals 插在 landmark 与 rhythm 之间
-//（主线：键盘地理 → 地标音 → 方向音程 → 节奏）。
+// 主线其余技巧落地后在此追加（#42 五指位置 …）：
+// registerTechnique(fiveFingerPositionPlugin); ...

@@ -50,10 +50,10 @@ describe("节奏插件 × 生产注册表", () => {
     expect(listTechniques().map((p) => p.manifest.id)).toContain("rhythm-reading");
   });
 
-  it("manifest：主线、暂以无前置起步（#40 合入后改回）、三关卡选择匹配口径", () => {
+  it("manifest：主线、前置为方向与音程（#40）、三关卡选择匹配口径", () => {
     const { manifest } = plugin();
     expect(manifest.track).toBe("main");
-    expect(manifest.prerequisites).toEqual([]);
+    expect(manifest.prerequisites).toEqual(["direction-intervals"]);
     expect(manifest.levels.map((l) => l.id)).toEqual(["L1", "L2", "L3"]);
     for (const level of manifest.levels) {
       expect(level.questionCount).toBe(10);

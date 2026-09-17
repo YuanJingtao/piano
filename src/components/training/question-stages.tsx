@@ -1,5 +1,6 @@
 import type { ComponentType } from "react";
 
+import IntervalMelodyStage from "@/plugins/direction-intervals/stage";
 import KeyboardGeoStage from "@/plugins/keyboard-geography/stage";
 import LandmarkNoteStage from "@/plugins/landmark-notes/stage";
 import {
@@ -17,9 +18,10 @@ import type { QuestionStageProps } from "./types";
 const QUESTION_STAGES: Readonly<Record<string, ComponentType<QuestionStageProps>>> = {
   "keyboard-geo": KeyboardGeoStage,
   "landmark-note": LandmarkNoteStage,
+  "interval-melody": IntervalMelodyStage,
   "rhythm-syllable-quiz": RhythmSyllableQuizStage,
   "rhythm-ear-quiz": RhythmEarQuizStage,
-  // 后续技巧题型落地后在此追加（#40 方向与音程 …）
+  // 后续技巧题型落地后在此追加（#42 五指位置 …）
 };
 
 export function getQuestionStage(questionType: string): ComponentType<QuestionStageProps> {
