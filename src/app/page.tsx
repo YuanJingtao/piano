@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { checkDbConnection } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
@@ -18,6 +20,12 @@ export default async function HomePage() {
         />
         <span>PostgreSQL {dbOk ? "已连通" : "未连通"}</span>
       </div>
+      <Link
+        href="/playground"
+        className="rounded-md border border-neutral-300 bg-white px-4 py-2 text-sm font-medium text-neutral-800 shadow-sm transition-colors hover:bg-neutral-100"
+      >
+        Playground · 发声层与共享交互组件（#36）
+      </Link>
     </main>
   );
 }
