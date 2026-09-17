@@ -7,7 +7,8 @@
  * 声音（ADR 0005，仅内部钩子、无用户开关）：
  * - 出题即发声：按序播放整段旋律（0.5s 步进，末音稍长）——纯耳朵通关是预期脚手架；
  * - 答对：末音确认声；
- * - 答错：播「你的音 → 正确音」对比（与地标音题面同款时序）。
+ * - 答错：播「你的音 → 正确音」对比（与地标音题面同款时序）；
+ * - 真琴接入时判定声关闭、示范音保留（#43 AC3，真琴原声即反馈）。
  *
  * 谱面标注叠加：首音（锚点）恒着地标色——「从家出发」的视觉脚手架，不泄露目标；
  * 判定后末音按对错着绿/红并标音名。
@@ -16,6 +17,7 @@
 import { useEffect } from "react";
 
 import type { QuestionStageProps } from "@/components/training/types";
+import { useMidiAnswer } from "@/components/training/use-midi-answer";
 import { getPianoAudio } from "@/lib/audio";
 import { midiToNoteName } from "@/lib/music/midi";
 import { LANDMARK_COLORS, landmarkByMidi } from "@/plugins/landmark-notes/landmarks";
@@ -37,11 +39,15 @@ export default function IntervalMelodyStage({
   judgement,
   onAnswer,
   interactive,
+  midi,
 }: QuestionStageProps) {
   const q = question as IntervalMelodyQuestion;
   const target = q.notes[q.notes.length - 1];
   const anchorLandmark = landmarkByMidi(q.notes[0]);
   const anchorColor = anchorLandmark ? LANDMARK_COLORS[anchorLandmark.id] : undefined;
+
+  // 真琴 noteon → 统一作答事件，与虚拟钢琴同流（#43 AC2）。
+  useMidiAnswer(midi, onAnswer);
 
   // 出题即发声：按序播放旋律；question 引用每次签发都是新对象（同题重出也重播）。
   useEffect(() => {
@@ -54,9 +60,9 @@ export default function IntervalMelodyStage({
     });
   }, [question, q.notes]);
 
-  // 判定声：答对末音确认；答错「你的音 → 正确音」对比。
+  // 判定声：答对末音确认；答错「你的音 → 正确音」对比；真琴接入时关闭（#43 AC3）。
   useEffect(() => {
-    if (!judgement) return;
+    if (!judgement || midi?.connected) return;
     const audio = getPianoAudio();
     if (judgement.ok) {
       audio.playNote(target, { durationSeconds: 0.5 });
@@ -64,7 +70,7 @@ export default function IntervalMelodyStage({
       audio.playNote(answer.midi, { durationSeconds: 0.35 });
       audio.playNote(target, { durationSeconds: 0.6, timeOffsetSeconds: 0.35 });
     }
-  }, [judgement, target, answer]);
+  }, [judgement, target, answer, midi]);
 
   const feedbackColor = judgement
     ? judgement.ok

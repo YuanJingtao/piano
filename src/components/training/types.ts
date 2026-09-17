@@ -1,4 +1,5 @@
 import type { AnswerEvent, Judgement, Question } from "@/domain/types";
+import type { MidiStageBridge } from "@/lib/midi/types";
 
 /**
  * 题面组件契约（浏览器层内容差异点，#38 定形）：
@@ -21,4 +22,10 @@ export type QuestionStageProps = {
   onAnswer: (event: AnswerEvent) => void;
   /** 是否可作答：反馈展示 / 结算阶段为 false（锁定交互）。 */
   interactive: boolean;
+  /**
+   * MIDI 真琴桥接（#43）：noteon 归一为统一作答事件与虚拟钢琴同流；
+   * connected 时作答发声关闭、示范音保留（ADR 0005）。
+   * 选择题题面（节奏）无键盘作答，忽略即可。
+   */
+  midi?: MidiStageBridge;
 };
