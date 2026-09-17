@@ -48,7 +48,11 @@ describe("五指三和弦插件 × 生产注册表", () => {
     expect(plugin().manifest.id).toBe("five-finger-triads");
     const ids = listTechniques().map((p) => p.manifest.id);
     expect(ids.indexOf("five-finger-triads")).toBeGreaterThan(ids.indexOf("rhythm-reading"));
-    expect(ids.indexOf("five-finger-triads")).toBe(ids.length - 1); // 主线五站收口
+    // 主线五站收口 = 主线注册序末位（#44 起支线注册在主线之后，不再恒为全表末位）。
+    const mainIds = listTechniques()
+      .filter((p) => p.manifest.track === "main")
+      .map((p) => p.manifest.id);
+    expect(mainIds[mainIds.length - 1]).toBe("five-finger-triads");
   });
 
   it("manifest：主线末位、前置为节奏阅读、四关卡全部弹奏口径（8 题 ≥85%、无限时）", () => {

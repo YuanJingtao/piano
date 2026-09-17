@@ -10,6 +10,7 @@
 import { registerTechnique } from "@/domain/registry";
 import directionIntervalsPlugin from "./direction-intervals";
 import fiveFingerTriadsPlugin from "./five-finger-triads";
+import functionalGroupsPlugin from "./functional-groups";
 import keyboardGeographyPlugin from "./keyboard-geography";
 import landmarkNotesPlugin from "./landmark-notes";
 import rhythmReadingPlugin from "./rhythm-reading";
@@ -20,4 +21,5 @@ registerTechnique(landmarkNotesPlugin);
 registerTechnique(directionIntervalsPlugin);
 registerTechnique(rhythmReadingPlugin);
 registerTechnique(fiveFingerTriadsPlugin);
-// 主线五站全部就位（#42 收口）；支线技巧落地后在此追加（#44 首调功能音组 …）。
+// 主线五站全部就位（#42 收口）；支线注册在主线之后（课程树支线区独立呈现，#44）。
+registerTechnique(functionalGroupsPlugin);

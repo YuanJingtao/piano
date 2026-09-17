@@ -44,6 +44,12 @@ export type LevelDef = {
   pass: PassRule;
   /** 逐题响应时限（ms），仅限时模式关卡设置；超时记为错题、ms 记为时限值。 */
   timeLimitMs?: number;
+  /**
+   * 作答方式（#44 契约附加，与 #42 AnswerEvent keys 变体同类的纯附加字段）：
+   * 仅浏览器层消费（PracticeStage 的提示文案与 MIDI 状态行），Round 引擎全程不读。
+   * "choice" = 选择·匹配题（无键盘作答）；省略 = 键盘弹奏作答（既有五技巧不变）。
+   */
+  answerMode?: "keyboard" | "choice";
   /** 技巧自定义的题池采样空间；由 samplePool 消费。 */
   pool: unknown;
 };

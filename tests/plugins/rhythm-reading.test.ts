@@ -61,6 +61,8 @@ describe("节奏插件 × 生产注册表", () => {
       expect(level.pass).toEqual({ minAccuracy: 0.8 });
       // 首版限时模式仅节奏关卡：三关全部声明时限值。
       expect(level.timeLimitMs).toBeGreaterThan(0);
+      // 选择·匹配题显式声明（#44 契约附加，PracticeStage 文案消费；行为不变）。
+      expect(level.answerMode).toBe("choice");
     }
     expect(levelOf("L1").timeLimitMs).toBe(8000);
     expect(levelOf("L2").timeLimitMs).toBe(8000);

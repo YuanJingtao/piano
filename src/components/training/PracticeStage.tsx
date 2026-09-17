@@ -110,8 +110,12 @@ export default function PracticeStage({
   const tutorialHref = `/techniques/${techniqueId}`;
   const isQuick = level.pass.maxMedianResponseMs !== undefined;
   const canTime = level.timeLimitMs !== undefined;
-  /** 首版仅节奏关卡声明 timeLimitMs（ADR 0003），可限时关卡即选择·匹配题关卡。 */
-  const isChoice = !isQuick && canTime;
+  /**
+   * 选择·匹配题关卡（无键盘作答）：由 manifest answerMode 声明（#44 契约附加）。
+   * 此前从「可限时 = 节奏选择题」推断——首调功能音组 L1–L4 为快答 × 选择题组合，
+   * 推断失效后改为显式声明，节奏关卡同步补声明（行为不变）。
+   */
+  const isChoice = level.answerMode === "choice";
   /**
    * 当轮生效的关卡定义：限时开关关闭时剥掉 timeLimitMs——Round 引擎与结算快照
    * （buildSettlementPayload → practice_session.time_limit_ms）都以它为准，
