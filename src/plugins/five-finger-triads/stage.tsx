@@ -8,7 +8,10 @@
  * - 出题即发声：柱式和弦题整体发声（playChord，AC2「和弦的整体色彩」）；
  *   键序列题按序发声（级进片段 / 分解和弦，与方向音程旋律题同款时序）；
  * - 答对：目标重播确认；
- * - 答错：播「你的（串/和弦）→ 正确（串/和弦）」对比（与既有题面同语义）。
+ * - 答错：播「你的（串/和弦）→ 正确（串/和弦）」对比（与既有题面同语义）；
+ * - 真琴接入时判定声关闭、示范音保留（#43 AC3，真琴原声即反馈）。
+ *
+ * 真琴作答（#43 AC2）：noteon 经 ChordKeyboard 进入同一收集流，集满自动提交 keys 变体。
  *
  * 谱面反馈：判定后音符按对错着绿/红并标音名（既有题面同款口径）。
  */
@@ -41,40 +44,43 @@ export function KeySequenceStage({
   judgement,
   onAnswer,
   interactive,
+  midi,
 }: QuestionStageProps) {
   const q = question as KeySequenceQuestion;
 
   // 出题即发声：按序播放目标序列；question 引用每次签发都是新对象（同题重出也重播）。
+  // 示范音不受真琴接入影响（#43 AC3：示范音保留）。
   useEffect(() => {
     const audio = getPianoAudio();
-    q.midis.forEach((midi, i) => {
-      audio.playNote(midi, {
+    q.midis.forEach((note, i) => {
+      audio.playNote(note, {
         durationSeconds: i === q.midis.length - 1 ? 0.9 : 0.45,
         timeOffsetSeconds: i * NOTE_GAP_SECONDS,
       });
     });
   }, [question, q.midis]);
 
-  // 判定声：答对重播目标序列确认；答错「你的序列 → 正确序列」对比（紧凑步进，控制在进题间隔内）。
+  // 判定声：答对重播目标序列确认；答错「你的序列 → 正确序列」对比（紧凑步进，
+  // 控制在进题间隔内）；真琴接入时关闭（#43 AC3）。
   useEffect(() => {
-    if (!judgement) return;
+    if (!judgement || midi?.connected) return;
     const audio = getPianoAudio();
     if (judgement.ok) {
-      q.midis.forEach((midi, i) => {
-        audio.playNote(midi, { durationSeconds: 0.4, timeOffsetSeconds: i * 0.3 });
+      q.midis.forEach((note, i) => {
+        audio.playNote(note, { durationSeconds: 0.4, timeOffsetSeconds: i * 0.3 });
       });
       return;
     }
     if (answer?.kind !== "keys") return;
     const userGap = 0.28;
-    answer.midis.forEach((midi, i) => {
-      audio.playNote(midi, { durationSeconds: 0.3, timeOffsetSeconds: i * userGap });
+    answer.midis.forEach((note, i) => {
+      audio.playNote(note, { durationSeconds: 0.3, timeOffsetSeconds: i * userGap });
     });
     const targetStart = answer.midis.length * userGap + 0.25;
-    q.midis.forEach((midi, i) => {
-      audio.playNote(midi, { durationSeconds: 0.4, timeOffsetSeconds: targetStart + i * 0.3 });
+    q.midis.forEach((note, i) => {
+      audio.playNote(note, { durationSeconds: 0.4, timeOffsetSeconds: targetStart + i * 0.3 });
     });
-  }, [judgement, answer, q.midis]);
+  }, [judgement, answer, q.midis, midi]);
 
   const feedbackColor = feedbackColorOf(judgement);
 
@@ -84,11 +90,11 @@ export function KeySequenceStage({
         {q.label}——按谱面顺序弹出这 {q.midis.length} 个音（弹满自动提交）
       </p>
       <ScoreExample
-        notes={q.midis.map((midi) => ({
-          midi,
+        notes={q.midis.map((note) => ({
+          midi: note,
           duration: "q" as const,
           ...(feedbackColor ? { color: feedbackColor } : {}),
-          ...(judgement ? { label: midiToNoteName(midi) } : {}),
+          ...(judgement ? { label: midiToNoteName(note) } : {}),
         }))}
         clef="treble"
         timeSignature={null}
@@ -99,6 +105,7 @@ export function KeySequenceStage({
         expectedCount={q.midis.length}
         resetKey={question}
         disabled={!interactive}
+        midi={midi}
         onSubmit={(midis, timestamp) => onAnswer({ kind: "keys", midis, timestamp })}
       />
     </div>
@@ -112,6 +119,7 @@ export function BlockChordStage({
   judgement,
   onAnswer,
   interactive,
+  midi,
 }: QuestionStageProps) {
   const q = question as BlockChordQuestion;
 
@@ -120,9 +128,9 @@ export function BlockChordStage({
     getPianoAudio().playChord(q.midis, { durationSeconds: 1.2 });
   }, [question, q.midis]);
 
-  // 判定声：答对整体和弦确认；答错「你的和弦 → 正确和弦」柱式对比。
+  // 判定声：答对整体和弦确认；答错「你的和弦 → 正确和弦」柱式对比；真琴接入时关闭（#43 AC3）。
   useEffect(() => {
-    if (!judgement) return;
+    if (!judgement || midi?.connected) return;
     const audio = getPianoAudio();
     if (judgement.ok) {
       audio.playChord(q.midis, { durationSeconds: 0.8 });
@@ -131,7 +139,7 @@ export function BlockChordStage({
     if (answer?.kind !== "keys") return;
     audio.playChord([...answer.midis].sort((x, y) => x - y), { durationSeconds: 0.6 });
     audio.playChord(q.midis, { durationSeconds: 0.9, timeOffsetSeconds: 0.7 });
-  }, [judgement, answer, q.midis]);
+  }, [judgement, answer, q.midis, midi]);
 
   const feedbackColor = feedbackColorOf(judgement);
 
@@ -158,6 +166,7 @@ export function BlockChordStage({
         expectedCount={q.midis.length}
         resetKey={question}
         disabled={!interactive}
+        midi={midi}
         onSubmit={(midis, timestamp) => onAnswer({ kind: "keys", midis, timestamp })}
       />
     </div>

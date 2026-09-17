@@ -9,8 +9,9 @@
  * 错题池（3× 权重、答对移出、达标即弃）为组件内存态、同关卡轮次间传递，
  * 不跨页持久化；中途放弃（返回教程/刷新）不提交，天然不留痕（ADR 0006）。
  *
- * 「开始」按钮同一手势内完成 Tone.start() 音频解锁（AC1 / ADR 0005）；
- * 出题即发声与答错对比声在题面组件内部（stage.tsx），无用户开关。
+ * 「开始」按钮同一手势内完成 Tone.start() 音频解锁（AC1 / ADR 0005）
+ * 与 requestMIDIAccess() 真琴授权（#43 AC4）；出题即发声与答错对比声
+ * 在题面组件内部（stage.tsx），无用户开关；真琴接入时作答发声关闭、示范音保留。
  */
 
 import Link from "next/link";
@@ -26,6 +27,7 @@ import type {
   Question,
   RoundResult,
 } from "@/domain/types";
+import { useMidiInput, type MidiInputApi } from "@/hooks/use-midi-input";
 import { getPianoAudio } from "@/lib/audio";
 import type { BestScore, SettlementPayload } from "@/lib/persistence/contracts";
 import { buildSettlementPayload } from "@/lib/training/settlement-payload";
@@ -78,6 +80,8 @@ export default function PracticeStage({
 }: PracticeStageProps) {
   const router = useRouter();
   const plugin = useMemo(() => getTechnique(techniqueId), [techniqueId]);
+  /** MIDI 真琴输入（#43）：Safari/iOS 自动 "unsupported"，虚拟钢琴照常（AC5）。 */
+  const midiInput = useMidiInput();
 
   const [phase, setPhase] = useState<Phase>({ kind: "idle" });
   const [history, setHistory] = useState<History>([]);
@@ -179,9 +183,14 @@ export default function PracticeStage({
     advanceTimerRef.current = window.setTimeout(advance, NEXT_DELAY_WRONG_MS);
   }
 
-  /** 「开始」点击手势内同步调用 start()：AudioContext 解锁绑定本手势（AC1）。 */
+  /**
+   * 「开始」点击手势内同步调用 start()：AudioContext 解锁绑定本手势（AC1）；
+   * requestMIDIAccess 同手势触发（#43 AC4）——权限弹窗需用户激活，两件事绑同一按钮最稳
+   * （tech-selection §4）。MIDI 授权不 await：不阻断开局，状态经状态行展示、热插拔即时生效。
+   */
   async function handleStart() {
     setStarting(true);
+    midiInput.requestAccess();
     try {
       await getPianoAudio().start();
     } catch (err) {
@@ -320,9 +329,10 @@ export default function PracticeStage({
             </p>
           )}
           <p className="mt-2 text-sm text-neutral-500">
-            点击「开始」将同时解锁音频；每题出题瞬间会播放
+            点击「开始」将同时解锁音频{isChoice ? "" : "并请求真琴（MIDI）授权"}；每题出题瞬间会播放
             {isChoice ? "节奏点击声示范" : "目标音高"}——先听再认，凭耳朵作答是预期行为。
           </p>
+          <MidiStatusLine api={midiInput} isChoice={isChoice} />
           {canTime && (
             <TimedModeToggle
               limitMs={level.timeLimitMs ?? 0}
@@ -353,6 +363,7 @@ export default function PracticeStage({
       <div className="mx-auto max-w-3xl px-5 py-10 lg:px-10">
         {header}
         <div className="rounded-lg border border-neutral-200 bg-white p-6 shadow-sm lg:p-8">
+          <MidiStatusLine api={midiInput} isChoice={isChoice} />
           {effectiveLevel.timeLimitMs !== undefined && phase.judgement === null && (
             <div className="mb-4 h-1.5 w-full overflow-hidden rounded-full bg-neutral-200" aria-hidden>
               <div
@@ -376,6 +387,7 @@ export default function PracticeStage({
             judgement={phase.judgement}
             onAnswer={handleAnswer}
             interactive={phase.judgement === null}
+            midi={midiInput.bridge}
           />
           <p
             role="status"
@@ -497,6 +509,53 @@ export default function PracticeStage({
       </div>
     </div>
   );
+}
+
+/**
+ * 真琴（MIDI）状态行（#43 降级矩阵，AC5/AC6）：
+ * - Safari / iOS（unsupported）：不渲染任何内容——静默回退仅虚拟钢琴，无报错、不打扰；
+ * - Firefox 首连（prompting + UA）：给「Site Permission Add-On」安装授权引导文案；
+ * - 已授权：展示设备接入状态；热插拔经 statechange 即时刷新（接入后作答发声自动关闭）。
+ *
+ * UA 检测在渲染期执行是安全的：非 idle 状态只出现在客户端交互之后，
+ * SSR/首帧两侧都渲染 null，无 hydration 不一致。
+ */
+function MidiStatusLine({ api, isChoice }: { api: MidiInputApi; isChoice: boolean }) {
+  // 节奏关卡为选择题作答，真琴无处发力——不展示 MIDI 状态，减少无关信息。
+  if (isChoice) return null;
+  const base = "mt-3 text-center text-xs";
+  switch (api.status) {
+    case "prompting": {
+      const isFirefox = typeof navigator !== "undefined" && navigator.userAgent.includes("Firefox");
+      return isFirefox ? (
+        <p className={`${base} text-amber-700`}>
+          🎹 Firefox 首次接入真琴：请按浏览器提示安装并授权「Site Permission Add-On（站点权限附加组件）」，
+          完成后插入键盘即可直接弹奏作答。
+        </p>
+      ) : (
+        <p className={`${base} text-neutral-500`}>🎹 正在请求真琴（MIDI）授权…</p>
+      );
+    }
+    case "granted":
+      return api.connected ? (
+        <p className={`${base} text-emerald-700`}>
+          🎹 真琴已接入（{api.inputNames.join("、")}）：直接弹奏作答；作答发声已关闭（真琴原声即反馈），示范音保留。
+        </p>
+      ) : (
+        <p className={`${base} text-neutral-500`}>
+          🎹 已授权 MIDI，未检测到真琴——插入键盘即自动接入；虚拟钢琴照常作答。
+        </p>
+      );
+    case "denied":
+      return (
+        <p className={`${base} text-neutral-500`}>
+          🎹 真琴授权未通过：使用虚拟钢琴作答，训练不受影响。
+        </p>
+      );
+    default:
+      // unsupported（Safari/iOS 静默回退）与 idle（未请求）：不渲染。
+      return null;
+  }
 }
 
 /**
