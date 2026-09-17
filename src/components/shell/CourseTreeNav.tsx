@@ -213,6 +213,17 @@ export default function CourseTreeNav({ nav }: { nav: CourseNavData }) {
           弱项统计（错题特征聚合）
         </Link>
         <Link
+          href="/leaderboard"
+          aria-current={pathname === "/leaderboard" ? "page" : undefined}
+          className={`block transition-colors ${
+            pathname === "/leaderboard"
+              ? "font-medium text-amber-900"
+              : "text-neutral-500 hover:text-neutral-700"
+          }`}
+        >
+          个人排行榜（限时模式）
+        </Link>
+        <Link
           href="/playground"
           className="block text-neutral-400 transition-colors hover:text-neutral-600"
         >
