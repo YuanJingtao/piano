@@ -200,8 +200,22 @@ export default function CourseTreeNav({ nav }: { nav: CourseNavData }) {
         {section("支线", nav.side)}
       </div>
 
-      <div className="border-t border-neutral-100 px-2.5 pt-3 text-xs text-neutral-400">
-        <Link href="/playground" className="transition-colors hover:text-neutral-600">
+      <div className="space-y-1 border-t border-neutral-100 px-2.5 pt-3 text-xs">
+        <Link
+          href="/stats"
+          aria-current={pathname === "/stats" ? "page" : undefined}
+          className={`block transition-colors ${
+            pathname === "/stats"
+              ? "font-medium text-amber-900"
+              : "text-neutral-500 hover:text-neutral-700"
+          }`}
+        >
+          弱项统计（错题特征聚合）
+        </Link>
+        <Link
+          href="/playground"
+          className="block text-neutral-400 transition-colors hover:text-neutral-600"
+        >
           Playground（发声层与组件走查）
         </Link>
       </div>
