@@ -1,5 +1,6 @@
 import type { ComponentType } from "react";
 
+import KeyboardGeoStage from "@/plugins/keyboard-geography/stage";
 import LandmarkNoteStage from "@/plugins/landmark-notes/stage";
 
 import type { QuestionStageProps } from "./types";
@@ -10,8 +11,9 @@ import type { QuestionStageProps } from "./types";
  * 仅被客户端组件（PracticeStage）消费；未注册题型视为程序错误，直接抛。
  */
 const QUESTION_STAGES: Readonly<Record<string, ComponentType<QuestionStageProps>>> = {
+  "keyboard-geo": KeyboardGeoStage,
   "landmark-note": LandmarkNoteStage,
-  // 后续技巧题型落地后在此追加（#39 键盘地理 / #40 方向与音程 / #41 节奏选择 …）
+  // 后续技巧题型落地后在此追加（#40 方向与音程 / #41 节奏选择 …）
 };
 
 export function getQuestionStage(questionType: string): ComponentType<QuestionStageProps> {

@@ -1,5 +1,6 @@
 import type { ComponentType } from "react";
 
+import KeyboardGeographyTutorial from "@/plugins/keyboard-geography/tutorial.mdx";
 import LandmarkNotesTutorial from "@/plugins/landmark-notes/tutorial.mdx";
 
 /**
@@ -11,5 +12,6 @@ import LandmarkNotesTutorial from "@/plugins/landmark-notes/tutorial.mdx";
  * 注册分别落在两处，新增技巧 = 插件目录 + 两行注册。
  */
 export const tutorials: Record<string, ComponentType> = {
+  "keyboard-geography": KeyboardGeographyTutorial,
   "landmark-notes": LandmarkNotesTutorial,
 };
