@@ -1,6 +1,7 @@
 import type { ComponentType } from "react";
 
 import DirectionIntervalsTutorial from "@/plugins/direction-intervals/tutorial.mdx";
+import FiveFingerTriadsTutorial from "@/plugins/five-finger-triads/tutorial.mdx";
 import KeyboardGeographyTutorial from "@/plugins/keyboard-geography/tutorial.mdx";
 import LandmarkNotesTutorial from "@/plugins/landmark-notes/tutorial.mdx";
 import RhythmReadingTutorial from "@/plugins/rhythm-reading/tutorial.mdx";
@@ -18,4 +19,5 @@ export const tutorials: Record<string, ComponentType> = {
   "landmark-notes": LandmarkNotesTutorial,
   "direction-intervals": DirectionIntervalsTutorial,
   "rhythm-reading": RhythmReadingTutorial,
+  "five-finger-triads": FiveFingerTriadsTutorial,
 };

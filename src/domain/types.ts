@@ -11,10 +11,16 @@
 /** 题目：插件产出的 JSON 可序列化对象；`type` 为判别字段，其余字段由技巧自定义。 */
 export type Question = { type: string } & Record<string, unknown>;
 
-/** 统一作答事件：虚拟钢琴与 MIDI 真琴归一为 midi；节奏选择/匹配题为 choice。 */
+/**
+ * 统一作答事件：虚拟钢琴与 MIDI 真琴归一为 midi；节奏选择/匹配题为 choice；
+ * 多键作答为 keys（#42 附加扩展：柱式和弦 / 级进片段 / 分解和弦——按键顺序收集，
+ * 「集合无序」（柱式）还是「严格有序」（片段/分解）语义由插件 judge 决定；
+ * Round 引擎对作答事件全程不透明，流程规则零改动）。
+ */
 export type AnswerEvent =
   | { kind: "midi"; midi: number; velocity: number; timestamp: number }
-  | { kind: "choice"; choiceId: string; timestamp: number };
+  | { kind: "choice"; choiceId: string; timestamp: number }
+  | { kind: "keys"; midis: readonly number[]; timestamp: number };
 
 /** 判定结果：核心引擎只消费 ok；feedback 为行内展示内容（✓/✗ + 音名 + ms），由插件负责。 */
 export type Judgement = {

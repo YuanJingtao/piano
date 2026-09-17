@@ -1,6 +1,10 @@
 import type { ComponentType } from "react";
 
 import IntervalMelodyStage from "@/plugins/direction-intervals/stage";
+import {
+  BlockChordStage,
+  KeySequenceStage,
+} from "@/plugins/five-finger-triads/stage";
 import KeyboardGeoStage from "@/plugins/keyboard-geography/stage";
 import LandmarkNoteStage from "@/plugins/landmark-notes/stage";
 import {
@@ -21,7 +25,9 @@ const QUESTION_STAGES: Readonly<Record<string, ComponentType<QuestionStageProps>
   "interval-melody": IntervalMelodyStage,
   "rhythm-syllable-quiz": RhythmSyllableQuizStage,
   "rhythm-ear-quiz": RhythmEarQuizStage,
-  // 后续技巧题型落地后在此追加（#42 五指位置 …）
+  "key-sequence": KeySequenceStage,
+  "block-chord": BlockChordStage,
+  // 后续技巧题型落地后在此追加（#44 首调功能音组 …）
 };
 
 export function getQuestionStage(questionType: string): ComponentType<QuestionStageProps> {
