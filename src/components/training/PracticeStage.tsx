@@ -388,7 +388,7 @@ export default function PracticeStage({
                   : "text-red-700"
             }`}
           >
-            {feedback ?? (isChoice ? "听示范 + 看题面，选出正确的选项" : "听音 + 看谱，在钢琴上按出这个音")}
+            {feedback ?? (isChoice ? "听示范 + 看题面，选出正确的选项" : "听声音，在钢琴上按出这个音")}
           </p>
         </div>
       </div>

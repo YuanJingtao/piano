@@ -34,10 +34,10 @@ describe("地标音插件 × 生产注册表", () => {
     expect(ids).not.toContain("example");
   });
 
-  it("manifest：主线、暂以无前置起步、四关卡全部快答口径（12 题 / ≥90% / 中位 ≤3s、无限时）", () => {
+  it("manifest：主线第二站（前置=键盘地理，#39 落地）、四关卡全部快答口径（12 题 / ≥90% / 中位 ≤3s、无限时）", () => {
     const { manifest } = plugin();
     expect(manifest.track).toBe("main");
-    expect(manifest.prerequisites).toEqual([]);
+    expect(manifest.prerequisites).toEqual(["keyboard-geography"]);
     expect(manifest.levels.map((l) => l.id)).toEqual(["L1", "L2", "L3", "L4"]);
     for (const level of manifest.levels) {
       expect(level.questionCount).toBe(12);
