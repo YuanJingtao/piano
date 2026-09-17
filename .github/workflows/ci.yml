@@ -14,10 +14,18 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
+          # 诊断期临时禁用 npm 缓存：lockfile 未变时缓存键恒定，
+          # 若缓存条目损坏会导致每次命中同一坏缓存、确定性挂起（npm ci ~8min → "Exit handler never called!"）
+          # cache: npm
+
+      - name: Diagnostics
+        run: |
+          node --version
+          npm --version
+          curl -sS -o /dev/null -w 'registry probe: %{http_code} in %{time_total}s\n' https://registry.npmjs.org/typescript
 
       - name: Install
-        run: npm ci --no-audit --no-fund
+        run: npm ci --no-audit --no-fund --loglevel http
 
       - name: Lint
         run: npm run lint
