@@ -1,0 +1,240 @@
+import PlayMelodyButton from "@/plugins/direction-intervals/PlayMelodyButton";
+import { CONTOURS, diatonicShift } from "@/plugins/direction-intervals/intervals";
+import { LANDMARK_COLORS } from "@/plugins/landmark-notes/landmarks";
+
+# 方向与音程阅读:读关系,不读名
+
+上一站,地标音给了你五个「家」。但真实的乐谱不是一堆孤立的音——它是**一串不断移动的音**。如果每读一个音都要先认出它的名字,再在键盘上找位置,速度永远快不起来。
+
+认知科学对专家视奏者的研究给出了一个一边倒的结论:高手读谱**不逐音拼名字,读的是音与音之间的关系**——方向(上/下/不动)和距离(挪一格?隔几格?)。这套方法有个正式名字,叫**音程阅读**(intervallic reading):把谱面上的距离当作**视觉形状**来认,形状认熟了,手在键盘上自动走出同样的距离。
+
+这一站就练这件事。规则很简单:
+
+1. **找到锚点**——每组音的第一个音(本技巧里全是五个地标音,颜色标出);
+2. **读出形状**——后面的音是挪一格、隔一格,还是跨八度;
+3. **平移手型**——键盘上走出同样的距离。
+
+全程不需要知道目标音叫什么名字。下面从最简单的「挪一格」开始。
+
+## 一、方向与步进:二度
+
+谱面上**紧挨着的两个音**(线到相邻的间、间到相邻的线)叫**二度**——就是「挪一格」。它是旋律里最常见的动作:
+
+<ScoreExample
+  notes={[
+    { midi: 67, duration: "q", color: LANDMARK_COLORS["treble-g"] },
+    { midi: 69, duration: "q" },
+  ]}
+  clef="treble"
+  timeSignature={null}
+  width={360}
+  className="mx-auto"
+/>
+
+<p className="text-center text-sm text-neutral-500 -mt-2">从高音 G(第二线)<strong>挪一格到上面的间</strong>:上二度</p>
+
+读这样的两个音,你只需要回答一个问题:**第二个音往上挪了,还是往下挪了?**往上一格、往下一格,或者**原地不动**(同音重复——谱上两个符头在同一个位置):
+
+<div className="not-prose grid gap-4 sm:grid-cols-3 my-6">
+  <div className="flex flex-col items-center gap-2">
+    <ScoreExample
+      notes={[
+        { midi: 67, duration: "q", color: LANDMARK_COLORS["treble-g"] },
+        { midi: 69, duration: "q" },
+      ]}
+      clef="treble"
+      timeSignature={null}
+      width={200}
+    />
+    <PlayMelodyButton midis={[67, 69]} label="▶ 上二度" />
+  </div>
+  <div className="flex flex-col items-center gap-2">
+    <ScoreExample
+      notes={[
+        { midi: 67, duration: "q", color: LANDMARK_COLORS["treble-g"] },
+        { midi: 65, duration: "q" },
+      ]}
+      clef="treble"
+      timeSignature={null}
+      width={200}
+    />
+    <PlayMelodyButton midis={[67, 65]} label="▶ 下二度" />
+  </div>
+  <div className="flex flex-col items-center gap-2">
+    <ScoreExample
+      notes={[
+        { midi: 67, duration: "q", color: LANDMARK_COLORS["treble-g"] },
+        { midi: 67, duration: "q" },
+      ]}
+      clef="treble"
+      timeSignature={null}
+      width={200}
+    />
+    <PlayMelodyButton midis={[67, 67]} label="▶ 同音重复" />
+  </div>
+</div>
+
+在键盘上,二度就是**相邻的白键**。有个细节值得知道:E-F、B-C 这两对相邻白键之间没有黑键(半音),其余相邻白键隔一个黑键(全音)——但在谱面上它们**都只挪一格**,读法完全一样。这就是「读形状」的好处:不用管音程的细微差别,格数说了算。
+
+<KeyboardDiagram highlights={[{ midi: 67, color: LANDMARK_COLORS["treble-g"], label: "G" }, { midi: 69, color: "#16a34a", label: "上二度" }, { midi: 65, color: "#2563eb", label: "下二度" }]} />
+
+## 二、三度与五度:隔格与爬楼梯
+
+把「挪一格」放大,就得到两个更常用的形状:
+
+**三度 = 隔一格**。线到线、间到间——中间跳过一格,像 skipping 一块台阶:
+
+<ScoreExample
+  notes={[
+    { midi: 67, duration: "q", color: LANDMARK_COLORS["treble-g"] },
+    { midi: 71, duration: "q" },
+  ]}
+  clef="treble"
+  timeSignature={null}
+  width={360}
+  className="mx-auto"
+/>
+
+<p className="text-center text-sm text-neutral-500 -mt-2">高音 G(第二线)→ B(第三线):<strong>线到线</strong>,隔一格 = 三度</p>
+
+**五度 = 线-间-线-间的爬楼梯**。从一条线爬到相邻的下一条线要经过「线-间-线」,五度则是再上一层楼,数一数正好跨五格(C→D→E→F→G):
+
+<ScoreExample
+  notes={[
+    { midi: 67, duration: "q", color: LANDMARK_COLORS["treble-g"] },
+    { midi: 74, duration: "q" },
+  ]}
+  clef="treble"
+  timeSignature={null}
+  width={360}
+  className="mx-auto"
+/>
+
+<p className="text-center text-sm text-neutral-500 -mt-2">高音 G(第二线)→ D5(第四线):中间夹着两条间 = 五度</p>
+
+**三度和五度长得像,怎么分?**数中间的格数:三度中间**空一格**(线-空-线),五度中间**隔三格**(线-间-线-间-线)。看熟了就是一眼的形状差,不用数。
+
+到键盘上验证一下——三度 = 隔一个白键,五度 = 跨五个白键(正好是 do-so 的手型跨度):
+
+<div className="not-prose flex flex-wrap gap-3 my-4">
+  <PlayMelodyButton midis={[67, 71]} label="▶ G→B 三度" />
+  <PlayMelodyButton midis={[67, 74]} label="▶ G→D 五度" />
+  <PlayMelodyButton midis={[65, 69]} label="▶ F→A 三度(间到间)" />
+</div>
+
+<KeyboardDiagram highlights={[{ midi: 67, color: LANDMARK_COLORS["treble-g"], label: "G" }, { midi: 71, color: "#16a34a", label: "三度" }, { midi: 74, color: "#7c3aed", label: "五度" }]} />
+
+## 三、八度:同名音的两个家
+
+**八度**是最后一个基础形状:同一个音名的两个音——中央 C 和高音 C、低音 C 和中央 C。地标音教程里你已经见过它们:五个地标里有三对八度关系。
+
+谱面上认八度靠两点:
+
+- **和锚点同线间性质但拉开大距离**——数格子要数满八格(含起点终点);
+- 更实用的捷径:键盘上**下一个同名键**,物理距离恒定 8 个白键,手型是「大拇指到小指完全张开」再不够一点——直接用胳膊量。
+
+<div className="not-prose flex flex-wrap gap-3 my-4">
+  <PlayMelodyButton midis={[60, 72]} label="▶ 中央 C → 高音 C" />
+  <PlayMelodyButton midis={[67, 79]} label="▶ 高音 G → G5" />
+  <PlayMelodyButton midis={[72, 60]} label="▶ 八度下行" />
+</div>
+
+<ScoreExample
+  notes={[
+    { midi: 60, duration: "q", color: LANDMARK_COLORS["middle-c"] },
+    { midi: 72, duration: "q", color: LANDMARK_COLORS["treble-c"] },
+  ]}
+  clef="treble"
+  timeSignature={null}
+  width={360}
+  className="mx-auto"
+/>
+
+<p className="text-center text-sm text-neutral-500 -mt-2">下加一线的 C → 第三间的 C:同名的两个家,距离八格</p>
+
+八度的声音你一听就认识:两个音「像是同一个音」,高度不同却完美融合——所有儿歌里「do~do~」的跳跃就是它。
+
+## 四、简单轮廓:形状连起来就是旋律
+
+真实的旋律是形状的**链条**。把二度和三度/五度连起来,就有了旋律最基本的轮廓词汇:
+
+- **级进上行/下行**:连续挪一格,像走楼梯——音阶片段就是这么读;
+- **跳进后回填**:跳一个三度或五度出去,马上反向走一步回来——波浪形,旋律写作里出现频率最高的形状(跳出去的空隙被「填」回来)。
+
+下面的谱例全部从高音 G 出发,六种轮廓一次看全(表格里可以直接听):
+
+<table>
+  <thead>
+    <tr>
+      <th>轮廓</th>
+      <th>谱例</th>
+      <th>听一听</th>
+    </tr>
+  </thead>
+  <tbody>
+    {CONTOURS.map((c) => {
+      const midis = c.offsets.map((o) => diatonicShift(67, o));
+      return (
+        <tr key={c.id}>
+          <td>{c.name}</td>
+          <td>
+            <ScoreExample
+              notes={midis.map((midi, i) => ({
+                midi,
+                duration: "q",
+                ...(i === 0 ? { color: LANDMARK_COLORS["treble-g"] } : {}),
+              }))}
+              clef="treble"
+              timeSignature={null}
+              width={200}
+            />
+          </td>
+          <td>
+            <PlayMelodyButton midis={midis} label="▶" />
+          </td>
+        </tr>
+      );
+    })}
+  </tbody>
+</table>
+
+读轮廓的要领是**整体看、别逐音拼**:一眼扫过去先抓「往上走还是往下走、是楼梯还是波浪」,再从锚点起手让手跟着形状走。这正是专家读谱的方式——他们看到的是 phrase(乐句轮廓),不是一个一个孤立的符头。
+
+## 方法要领:三步走
+
+把整站内容压缩成三句话:
+
+1. **找锚点**——第一个音永远是你认识的地标音,它就是「家」;
+2. **读形状**——后面每个音相对前一个音:挪一格(二度)、隔一格(三度)、爬楼梯(五度)、跨八格(八度);
+3. **平移手型**——键盘上的物理距离和谱面格数一一对应,手跟着形状走,不用想音名。
+
+这套读法还有个隐藏红利:**形状与调无关**。今天所有内容都在 C 大调的白键上,但「三度 = 隔一格」在任何一个调、任何一个起点上都成立——将来换调读谱,靠的还是同一套形状。这就是音程阅读被称为「长期核心技能」的原因。
+
+## 听音环节:先听,后看
+
+老规矩,声音先于符号。建议按这个顺序练:
+
+1. **盲听画轮廓**:闭上眼睛点开下面的按钮,用手指在空中跟着旋律「画」出走向(上/下/波浪);
+2. **听后验证**:睁眼看对应谱例,确认你脑中画的轮廓和谱面形状一致;
+3. **形状听辨**:听 G→B 和 G→D,体会三度(近)和五度(远)的跨度差;再听八度——「同一个音变高了」的融合感非常独特。
+
+<div className="not-prose flex flex-wrap gap-3 my-4">
+  <PlayMelodyButton midis={[67, 69]} label="▶ 上二度" />
+  <PlayMelodyButton midis={[67, 65]} label="▶ 下二度" />
+  <PlayMelodyButton midis={[67, 71]} label="▶ 三度" />
+  <PlayMelodyButton midis={[67, 74]} label="▶ 五度" />
+  <PlayMelodyButton midis={[67, 79]} label="▶ 八度" />
+  <PlayMelodyButton midis={[67, 69, 71]} label="▶ 级进上行" />
+  <PlayMelodyButton midis={[67, 71, 69]} label="▶ 跳进回填" />
+</div>
+
+## 配套练习
+
+学完教程,到左侧课程树里依次完成本技巧的四个关卡:
+
+- **L1 二度步进 / 重复 / 方向**——只判断挪一格还是不动,把方向感练成反射;
+- **L2 三度与五度形状**——隔一格与爬楼梯,两种「跳」的形状分清楚;
+- **L3 八度与形状混合**——加入八度,三种跳进混合出题;
+- **L4 简单轮廓**——三音旋律组,级进与跳进回填连起来读。
+
+每关都是快答关卡:每轮 12 题,正确率达到 90% 且中位响应不超过 3 秒即通过。每组音出题瞬间会**按序出声**——先靠耳朵、再靠眼睛,这是刻意设计的脚手架,放心用;练熟了自然越来越依赖谱面形状。四关全部通过后本技巧毕业,主线下一站(节奏阅读基础)为你解锁。
