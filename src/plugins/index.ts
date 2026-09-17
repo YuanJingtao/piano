@@ -9,6 +9,7 @@
  */
 import { registerTechnique } from "@/domain/registry";
 import directionIntervalsPlugin from "./direction-intervals";
+import fiveFingerTriadsPlugin from "./five-finger-triads";
 import keyboardGeographyPlugin from "./keyboard-geography";
 import landmarkNotesPlugin from "./landmark-notes";
 import rhythmReadingPlugin from "./rhythm-reading";
@@ -18,5 +19,5 @@ registerTechnique(keyboardGeographyPlugin);
 registerTechnique(landmarkNotesPlugin);
 registerTechnique(directionIntervalsPlugin);
 registerTechnique(rhythmReadingPlugin);
-// 主线其余技巧落地后在此追加（#42 五指位置 …）：
-// registerTechnique(fiveFingerPositionPlugin); ...
+registerTechnique(fiveFingerTriadsPlugin);
+// 主线五站全部就位（#42 收口）；支线技巧落地后在此追加（#44 首调功能音组 …）。

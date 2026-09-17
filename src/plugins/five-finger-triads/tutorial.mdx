@@ -1,0 +1,234 @@
+import PlayMelodyButton from "@/plugins/direction-intervals/PlayMelodyButton";
+
+# 五指位置与三和弦:从读单音到读「块」
+
+主线的最后一站。前四站里,你已经会了在键盘上定位(键盘地理)、把音挂上谱面(地标音)、读音与音的关系(方向与音程)、读节奏的时值(节奏阅读)。但真实乐谱上最多的其实是**「块」**:一串相邻的音用一个手型直接拿下,或者三个音叠在一起同时按下。逐音去读「块」,又慢又容易断。
+
+这一站学两样读「块」的武器:
+
+1. **五指位置**——手有一个固定的「家」,五个手指各守一键;谱上相邻的音就是相邻的手指,不用逐个找键;
+2. **三和弦形状**——谱上「叠罗汉」的三个音,就是键盘上 1-3-5 指撑起的一个手型;一眼识别、一把按下。
+
+## 一、五指位置:手的「家」
+
+把右手拇指放在**中央 C(C4)** 上,其余四指自然落在右边相邻的四个白键上——D4、E4、F4、G4,一指一键。这个手型就叫 **C 位置**(C position):
+
+<KeyboardDiagram
+  highlights={[
+    { midi: 60, color: "#f59e0b", label: "① 拇指" },
+    { midi: 62, color: "#f59e0b", label: "② 食指" },
+    { midi: 64, color: "#f59e0b", label: "③ 中指" },
+    { midi: 65, color: "#f59e0b", label: "④ 无名指" },
+    { midi: 67, color: "#f59e0b", label: "⑤ 小指" },
+  ]}
+/>
+
+在谱面上,C 位置的五个音从下加一线的 C 开始,一格一格往上排。 finger 编号(指法)写在音符旁边——**谱上的每个音对应一个固定的手指**,这就是五指位置的全部秘密:
+
+<ScoreExample
+  notes={[
+    { midi: 60, duration: "q", label: "①" },
+    { midi: 62, duration: "q", label: "②" },
+    { midi: 64, duration: "q", label: "③" },
+    { midi: 65, duration: "q", label: "④" },
+    { midi: 67, duration: "q", label: "⑤" },
+  ]}
+  clef="treble"
+  timeSignature={null}
+  width={440}
+  className="mx-auto"
+/>
+
+<div className="not-prose flex flex-wrap gap-2 my-4">
+  <PlayNoteButton midi={60} label="▶ ① C4" durationSeconds={1} />
+  <PlayNoteButton midi={62} label="▶ ② D4" durationSeconds={1} />
+  <PlayNoteButton midi={64} label="▶ ③ E4" durationSeconds={1} />
+  <PlayNoteButton midi={65} label="▶ ④ F4" durationSeconds={1} />
+  <PlayNoteButton midi={67} label="▶ ⑤ G4" durationSeconds={1} />
+</div>
+
+## 二、G 位置:同一个手型,平移过去
+
+手型不变,整个手往高音方向挪,让**拇指落在 G4(高音 G,地标音)** 上——其余四指自然守住 A4、B4、C5、D5。这就是 **G 位置**:
+
+<KeyboardDiagram
+  highlights={[
+    { midi: 67, color: "#0ea5e9", label: "① 拇指" },
+    { midi: 69, color: "#0ea5e9", label: "② 食指" },
+    { midi: 71, color: "#0ea5e9", label: "③ 中指" },
+    { midi: 72, color: "#0ea5e9", label: "④ 无名指" },
+    { midi: 74, color: "#0ea5e9", label: "⑤ 小指" },
+  ]}
+/>
+
+<ScoreExample
+  notes={[
+    { midi: 67, duration: "q", label: "①" },
+    { midi: 69, duration: "q", label: "②" },
+    { midi: 71, duration: "q", label: "③" },
+    { midi: 72, duration: "q", label: "④" },
+    { midi: 74, duration: "q", label: "⑤" },
+  ]}
+  clef="treble"
+  timeSignature={null}
+  width={440}
+  className="mx-auto"
+/>
+
+<div className="not-prose flex flex-wrap gap-2 my-4">
+  <PlayNoteButton midi={67} label="▶ ① G4" durationSeconds={1} />
+  <PlayNoteButton midi={69} label="▶ ② A4" durationSeconds={1} />
+  <PlayNoteButton midi={71} label="▶ ③ B4" durationSeconds={1} />
+  <PlayNoteButton midi={72} label="▶ ④ C5" durationSeconds={1} />
+  <PlayNoteButton midi={74} label="▶ ⑤ D5" durationSeconds={1} />
+</div>
+
+注意一件事:**位置的指法图案完全一样**,变的只是「家」搬到了哪里。所以读谱时你不需要逐音认名——先找到拇指的家(C 位置还是 G 位置),谱上的音就自动变成了「几指」,手会自己走对。这就是从「读单音」升级到「读位置」的第一级台阶。
+
+## 三、级进片段:位置里的音串成一个手势
+
+位置站稳之后,谱上**紧挨着的几个音**(级进)就不再是一个个独立的音,而是**一个手势**:比如 C 位置里的 C-D-E,就是 ①-②-③ 三个手指依次落下;E-D-C 反过来就是 ③-②-①:
+
+<div className="not-prose grid gap-4 sm:grid-cols-2 my-6">
+  <div className="flex flex-col items-center gap-2">
+    <ScoreExample
+      notes={[
+        { midi: 60, duration: "q", label: "①" },
+        { midi: 62, duration: "q", label: "②" },
+        { midi: 64, duration: "q", label: "③" },
+      ]}
+      clef="treble"
+      timeSignature={null}
+      width={300}
+    />
+    <PlayMelodyButton midis={[60, 62, 64]} label="▶ 上行 C-D-E" />
+  </div>
+  <div className="flex flex-col items-center gap-2">
+    <ScoreExample
+      notes={[
+        { midi: 64, duration: "q", label: "③" },
+        { midi: 62, duration: "q", label: "②" },
+        { midi: 60, duration: "q", label: "①" },
+      ]}
+      clef="treble"
+      timeSignature={null}
+      width={300}
+    />
+    <PlayMelodyButton midis={[64, 62, 60]} label="▶ 下行 E-D-C" />
+  </div>
+</div>
+
+上一站你练过「读方向、读形状」;现在把形状和**固定手型**绑在一起:看到三个音符阶梯式往上爬,手在位置里直接走出 ①-②-③——**读的是图案,弹的是手势**。L1/L2 两关练的就是这个:C 位置与 G 位置里的三音级进片段。
+
+## 四、原位三和弦:谱上的「叠罗汉」
+
+把三个音**隔一个摞一个**地叠起来(根音-三音-五音),就是**三和弦**。它在谱面上有个一眼就能认出的形状——三个符头紧紧叠在一起,像叠罗汉:**要么全在线上(线-线-线),要么全在间上(间-间-间)**:
+
+<div className="not-prose grid gap-4 sm:grid-cols-2 my-6">
+  <div className="flex flex-col items-center gap-2">
+    <ScoreExample
+      notes={[{ midi: [67, 71, 74], duration: "q", label: "线-线-线" }]}
+      clef="treble"
+      timeSignature={null}
+      width={300}
+    />
+    <p className="text-sm text-neutral-500">G 大三和弦:全在线上</p>
+    <PlayNoteButton midi={[67, 71, 74]} label="▶ 听柱式(同时响)" />
+  </div>
+  <div className="flex flex-col items-center gap-2">
+    <ScoreExample
+      notes={[{ midi: [65, 69, 72], duration: "q", label: "间-间-间" }]}
+      clef="treble"
+      timeSignature={null}
+      width={300}
+    />
+    <p className="text-sm text-neutral-500">F 大三和弦:全在间上</p>
+    <PlayNoteButton midi={[65, 69, 72]} label="▶ 听柱式(同时响)" />
+  </div>
+</div>
+
+三个音**同时按下**弹出来,叫**柱式和弦**——像三根柱子立在一起。手型正好是五指位置的升级版:拇指按根音(①)、中指按三音(③)、小指按五音(⑤),1-3-5 指撑开,手型不用想,看到「叠罗汉」自动就位:
+
+<KeyboardDiagram
+  highlights={[
+    { midi: 60, color: "#16a34a", label: "① 根音 C" },
+    { midi: 64, color: "#16a34a", label: "③ 三音 E" },
+    { midi: 67, color: "#16a34a", label: "⑤ 五音 G" },
+  ]}
+/>
+
+<div className="not-prose my-4">
+  <PlayNoteButton midi={[60, 64, 67]} label="▶ 听 C 大三和弦(柱式)" durationSeconds={1.5} />
+</div>
+
+### 大三和弦与小三和弦:一耳朵的差别
+
+C 大调里的六个顺阶三和弦分两种色彩:**根音到三音隔两个全音**的明亮开阔,叫**大三和弦**(C、F、G 三个);**隔一个全音加一个半音**的柔和暗淡,叫**小三和弦**(D、E、A 三个)。谱面形状几乎一样(都是叠罗汉),差别要用**耳朵**分:
+
+<div className="not-prose flex flex-wrap gap-2 my-4">
+  <PlayNoteButton midi={[60, 64, 67]} label="▶ C 大(明亮)" durationSeconds={1.5} />
+  <PlayNoteButton midi={[65, 69, 72]} label="▶ F 大(明亮)" durationSeconds={1.5} />
+  <PlayNoteButton midi={[67, 71, 74]} label="▶ G 大(明亮)" durationSeconds={1.5} />
+</div>
+
+<div className="not-prose flex flex-wrap gap-2 my-4">
+  <PlayNoteButton midi={[62, 65, 69]} label="▶ D 小(柔和)" durationSeconds={1.5} />
+  <PlayNoteButton midi={[64, 67, 71]} label="▶ E 小(柔和)" durationSeconds={1.5} />
+  <PlayNoteButton midi={[69, 72, 76]} label="▶ A 小(柔和)" durationSeconds={1.5} />
+</div>
+
+训练里出题的瞬间会把柱式和弦**整体弹给你听**——先感受色彩,再到谱上确认「叠罗汉」,最后在键盘上用 1-3-5 手型一把按下。L3 关练的就是这个。
+
+## 五、分解和弦:把「叠罗汉」拆开弹
+
+同样是这三个音,**不同时按,而是按顺序一个一个弹**——就叫**分解和弦**。最常见的入门图案是**根-三-五-三**(do-mi-so-mi):爬上五音再回落到三音,像一个小波浪:
+
+<ScoreExample
+  notes={[
+    { midi: 60, duration: "q", label: "①" },
+    { midi: 64, duration: "q", label: "③" },
+    { midi: 67, duration: "q", label: "⑤" },
+    { midi: 64, duration: "q", label: "③" },
+  ]}
+  clef="treble"
+  timeSignature={null}
+  width={380}
+  className="mx-auto"
+/>
+
+<div className="not-prose flex flex-wrap gap-3 my-4">
+  <PlayNoteButton midi={[60, 64, 67]} label="▶ 先听柱式" durationSeconds={1.5} />
+  <PlayMelodyButton midis={[60, 64, 67, 64]} label="▶ 再听分解(根-三-五-三)" />
+</div>
+
+关键在「**同形**」两个字:柱式和弦和分解和弦是**同一组音、同一个 1-3-5 手型**,只是一个同时按、一个依次弹。所以看到谱上四个音符的波浪,你先把它「叠」回去——认出这是个三和弦,手指自动就是 ①-③-⑤-③。L4 关练的就是这个来回报换。
+
+## 听音环节:先听,再看,再弹
+
+按声音先行的老规矩,建议这样练:
+
+1. **听柱式辨形状**:点开一个和弦,闭眼感受大小色彩,想象它在谱上是「线叠线」还是「间叠间」,再睁眼对照;
+2. **听分解想波形**:听根-三-五-三的波浪,跟着哼一遍,想象 ①-③-⑤-③ 的手指顺序;
+3. **柱式↔分解互换**:同一个和弦先听柱式再听分解,确认「同一组音、同一个手型」的体感。
+
+<div className="not-prose flex flex-wrap gap-2 my-4">
+  <PlayNoteButton midi={[60, 64, 67]} label="▶ C 大·柱式" durationSeconds={1.5} />
+  <PlayMelodyButton midis={[60, 64, 67, 64]} label="▶ C 大·分解" />
+  <PlayNoteButton midi={[62, 65, 69]} label="▶ D 小·柱式" durationSeconds={1.5} />
+  <PlayMelodyButton midis={[62, 65, 69, 65]} label="▶ D 小·分解" />
+  <PlayNoteButton midi={[67, 71, 74]} label="▶ G 大·柱式" durationSeconds={1.5} />
+  <PlayMelodyButton midis={[67, 71, 74, 71]} label="▶ G 大·分解" />
+</div>
+
+## 配套练习
+
+学完教程,到左侧课程树里依次完成本技巧的四个关卡(全部为弹奏关卡,每轮 8 题、正确率 ≥85% 通过):
+
+- **L1 C 位置五指级进**——C 位置里的三音级进片段,按谱面顺序弹出;
+- **L2 G 位置五指级进**——同一手型平移到 G 位置;
+- **L3 原位三和弦叠罗汉**——看「叠罗汉」+ 听柱式和弦,把三个和弦音**多键同按**(不分先后);
+- **L4 同形分解和弦**——把「叠罗汉」按根-三-五-三的顺序拆开弹。
+
+多键作答的玩法:在虚拟钢琴上**逐键点按**(触屏也可以多指同按),每按一键都会发声、并显示在上方收集区;**集满自动提交**,按错了可以点「↺ 重按」清空重来。所有题目**出题瞬间都会发声**——和弦题播的是柱式和弦整体,凭耳朵作答依然是预期行为。
+
+四关全部通过,本技巧毕业——**主线首版学习路径到此全部走完**。支线「首调功能音组」在地标音毕业后就已解锁,随时可以去拓展唱名能力;之后的节奏、音程、和弦关卡也都可以自由复习。
