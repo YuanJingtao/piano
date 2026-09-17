@@ -211,8 +211,15 @@ integration("轮次结算落库（真实 PostgreSQL，不 mock）", () => {
   });
 
   it("GET /api/course-tree：200 + 注册表技巧入树，结算落库即时反映到派生状态", async () => {
-    // #37 起注册表装载真实技巧（landmark-notes），本用例走通
-    // 结算落库 → 查询期派生（ADR 0006）→ HTTP 视图 的全链路。
+    // #37 起注册表装载真实技巧；#39 起地标音前置键盘地理。
+    // 本用例走通 结算落库 → 查询期派生（ADR 0006）→ HTTP 视图 的全链路，
+    // 顺带覆盖主线解锁链：键盘地理三关毕业 → 地标音解锁。
+    for (const levelId of ["L1", "L2", "L3"]) {
+      const geo = await postSettlement(
+        makePayload({ techniqueId: "keyboard-geography", levelId }),
+      );
+      expect(geo.status).toBe(201);
+    }
     const settle = await postSettlement(
       makePayload({ techniqueId: "landmark-notes", levelId: "L1" }),
     );
@@ -220,12 +227,17 @@ integration("轮次结算落库（真实 PostgreSQL，不 mock）", () => {
 
     const { status, body } = await getCourseTreeHttp();
     expect(status).toBe(200);
-    const techniques = body?.["techniques"];
+    const techniques = body?.["techniques"] as Record<string, unknown>[];
     expect(Array.isArray(techniques)).toBe(true);
-    const landmark = (techniques as Record<string, unknown>[]).find(
-      (t) => t["id"] === "landmark-notes",
-    );
+    // 注册顺序 = 课程树呈现顺序：键盘地理（主线首位）在地标音之前
+    expect(techniques.map((t) => t["id"]).slice(0, 2)).toEqual([
+      "keyboard-geography",
+      "landmark-notes",
+    ]);
+    expect(techniques[0]).toMatchObject({ unlocked: true, graduated: true });
+    const landmark = techniques.find((t) => t["id"] === "landmark-notes");
     expect(landmark).toBeDefined();
+    expect(landmark?.["unlocked"]).toBe(true); // 键盘地理毕业后解锁（AC）
     const levels = landmark?.["levels"] as Record<string, unknown>[];
     expect(levels).toHaveLength(4);
     // L1 本轮通过 → passed 且仍解锁（复习）；L2 因 L1 通过而解锁；L3 未解锁

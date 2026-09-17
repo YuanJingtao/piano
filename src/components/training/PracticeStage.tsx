@@ -311,7 +311,7 @@ export default function PracticeStage({
                   : "text-red-700"
             }`}
           >
-            {feedback ?? "听音 + 看谱，在钢琴上按出这个音"}
+            {feedback ?? "听声音，在钢琴上按出这个音"}
           </p>
         </div>
       </div>

@@ -8,8 +8,11 @@
  * 课程树从注册表枚举渲染，示例技巧不属于课程内容；其测试显式注册。
  */
 import { registerTechnique } from "@/domain/registry";
+import keyboardGeographyPlugin from "./keyboard-geography";
 import landmarkNotesPlugin from "./landmark-notes";
 
+// 注册顺序 = 课程树主线呈现顺序（listTechniques 按注册序枚举）：键盘地理是主线第一站。
+registerTechnique(keyboardGeographyPlugin);
 registerTechnique(landmarkNotesPlugin);
-// 主线其余技巧落地后在此追加（#39 键盘地理 / #40 方向与音程 / #41 节奏 / #42 五指位置）：
-// registerTechnique(keyboardGeographyPlugin); ...
+// 主线其余技巧落地后在此追加（#40 方向与音程 / #41 节奏 / #42 五指位置）：
+// registerTechnique(directionIntervalsPlugin); ...

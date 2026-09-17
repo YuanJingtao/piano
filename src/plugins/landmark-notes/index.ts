@@ -42,13 +42,8 @@ export const landmarkNotesManifest: TechniqueManifest = {
   id: "landmark-notes",
   title: "地标音系统",
   track: "main",
-  /**
-   * 主线首个落地技巧：暂以无前置起步（P2 端到端可用的前提）。
-   * 键盘地理（#39）落地后按主线教学顺序（键盘地理 → 地标音）改回
-   * prerequisites: ["keyboard-geography"]——进度派生已兼容该调整
-   * （已通过关卡永远可复习，deriveCourseTree）。
-   */
-  prerequisites: [],
+  /** 主线第二站（教学顺序：键盘地理 → 地标音）；#37 落地时暂空，#39 落地后改回。 */
+  prerequisites: ["keyboard-geography"],
   levels: [
     {
       id: "L1",
