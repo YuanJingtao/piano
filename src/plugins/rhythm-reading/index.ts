@@ -117,6 +117,8 @@ export function enumerateMeasures(units: readonly RhythmUnit[]): RhythmPattern[]
 const RHYTHM_LEVEL = {
   questionCount: 10,
   pass: { minAccuracy: 0.8 },
+  /** 选择·匹配题声明（#44 起 answerMode 显式化，PracticeStage 文案消费；行为不变）。 */
+  answerMode: "choice",
 } as const;
 
 export const rhythmReadingManifest: TechniqueManifest = {

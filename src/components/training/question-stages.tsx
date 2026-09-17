@@ -5,6 +5,11 @@ import {
   BlockChordStage,
   KeySequenceStage,
 } from "@/plugins/five-finger-triads/stage";
+import {
+  GroupEarQuizStage,
+  GroupNotationQuizStage,
+  GroupPlayStage,
+} from "@/plugins/functional-groups/stage";
 import KeyboardGeoStage from "@/plugins/keyboard-geography/stage";
 import LandmarkNoteStage from "@/plugins/landmark-notes/stage";
 import {
@@ -27,7 +32,9 @@ const QUESTION_STAGES: Readonly<Record<string, ComponentType<QuestionStageProps>
   "rhythm-ear-quiz": RhythmEarQuizStage,
   "key-sequence": KeySequenceStage,
   "block-chord": BlockChordStage,
-  // 后续技巧题型落地后在此追加（#44 首调功能音组 …）
+  "group-notation-quiz": GroupNotationQuizStage,
+  "group-ear-quiz": GroupEarQuizStage,
+  "group-play": GroupPlayStage,
 };
 
 export function getQuestionStage(questionType: string): ComponentType<QuestionStageProps> {

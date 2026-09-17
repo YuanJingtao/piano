@@ -1,0 +1,223 @@
+import PlayMelodyButton from "@/plugins/direction-intervals/PlayMelodyButton";
+import JianpuMapping from "@/plugins/functional-groups/JianpuMapping";
+
+# 首调功能音组:用「1-3-5」读五线谱
+
+如果你学过简谱——哪怕只是小时候在音乐课上见过「1 2 3 4 5 6 7」——那么这条支线是为你准备的。简谱不是五线谱的「简化替代品」,它的本质是**首调唱名的数字书写**:1 念作 do,2 念作 re,数字记的不是绝对音高,而是音在调里的**功能**。
+
+这条支线要做的事,就是把这份已有的简谱经验接进五线谱阅读:学会用「1-3-5(do-mi-so)」这样的**功能音组**整组地读谱,而不是一个音一个音地数。它是首版唯一的支线技巧,在**地标音系统毕业后解锁**——你需要先认得中央 C、高音 G、低音 F 这些地标,再来看音组才有落点。
+
+## 一、首调唱名:给音起「功能」的名字
+
+你已经在主线里学过音名(C、D、E)——那是音高的**绝对地址**,和钢琴键一一对应。首调唱名是另一套名字:do、re、mi、fa、so、la、ti,它们记的是音在调里的**位置与功能**,其中 **do = 主音**,即调的「家」。
+
+首版内容固定在 **C 大调与 a 小调**(无升降号),此时 do 恒等于 C,唱名、简谱、音名一一对应:
+
+| 唱名 | do | re | mi | fa | so | la | ti |
+|---|---|---|---|---|---|---|---|
+| **简谱** | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+| **C 大调音名** | C | D | E | F | G | A | B |
+
+唱一遍 C 大调音阶,顺带听一听(建议跟着念出唱名或数字):
+
+<ScoreExample
+  notes={[
+    { midi: 60, duration: "8" },
+    { midi: 62, duration: "8" },
+    { midi: 64, duration: "8" },
+    { midi: 65, duration: "8" },
+    { midi: 67, duration: "8" },
+    { midi: 69, duration: "8" },
+    { midi: 71, duration: "8" },
+    { midi: 72, duration: "8" },
+  ]}
+  clef="treble"
+  timeSignature="4/4"
+  width={460}
+  className="mx-auto"
+/>
+
+<div className="not-prose my-4 flex justify-center">
+  <PlayMelodyButton midis={[60, 62, 64, 65, 67, 69, 71, 72]} label="▶ 听:do-re-mi-fa-so-la-ti-do" noteGapSeconds={0.4} />
+</div>
+
+首调唱名的妙处在于**可迁移**:一首简谱歌写着 1 3 5,把它挪到任何一个调,还是唱 do-mi-so,手型也不变。数字与音节跟着「家」走,不跟着琴键走。(本教程的拼写统一用 so,有些教材写 sol,是同一个音。)
+
+## 二、功能音组:把「阅读词汇」从字升级成词
+
+主线「方向与音程阅读」教你**读关系不读名**——看到两个音符,读出「上二度」「三度」,而不是先翻译成音名再比较。这条支线再进一步:把最常见的**三个音的组合**打包成一个整体,像认单词一样认它。
+
+认知科学里这叫**组块**(chunking):初学者逐字母拼读 C-A-T,熟练读者一眼认出 CAT。识谱同理——逐个音认读慢且容易丢上下文,而把 do-mi-so 当成一个「词」,一眼扫过去就是「主和弦音组,1-3-5」,读谱速度自然上来。
+
+首版学三个词,全部来自 C 大调 / a 小调的调内音:
+
+## 三、第一组 do-mi-so(1-3-5):大调的「家」
+
+do-mi-so 是 C 大调**主三和弦**的三个音,首调教学里最重要的音组——它是「家」:旋律无论怎么走,落回 do-mi-so 就有安定感。
+
+<ScoreExample
+  notes={[
+    { midi: 60, duration: "q" },
+    { midi: 64, duration: "q" },
+    { midi: 67, duration: "q" },
+  ]}
+  clef="treble"
+  timeSignature={null}
+  width={360}
+  className="mx-auto"
+/>
+
+<div className="not-prose my-4 flex flex-wrap justify-center gap-3">
+  <PlayMelodyButton midis={[60, 64, 67]} label="▶ 听:do-mi-so 依次弹" />
+  <PlayNoteButton midi={[60, 64, 67]} label="▶ 听:三音同按(柱式)" durationSeconds={1.5} />
+</div>
+
+先听旋律形态(依次弹),再听和声形态(同按)——同一组音,两种色彩。你在主线「五指位置与三和弦」里弹过的 C 大三和弦,用首调唱名读就是 do-mi-so。
+
+**同一个词的变形**:三个音换个顺序,还是这一组。下面两个谱例分别是 mi-so-do(3-5-1)和 so-do-mi(5-1-3)——形状变了,「家」的感觉没变:
+
+<ScoreExample
+  notes={[
+    { midi: 64, duration: "q" },
+    { midi: 67, duration: "q" },
+    { midi: 60, duration: "q" },
+  ]}
+  clef="treble"
+  timeSignature={null}
+  width={360}
+  className="mx-auto"
+/>
+
+<div className="not-prose my-4 flex flex-wrap justify-center gap-3">
+  <PlayMelodyButton midis={[64, 67, 60]} label="▶ mi-so-do(3-5-1)" />
+  <PlayMelodyButton midis={[67, 60, 64]} label="▶ so-do-mi(5-1-3)" />
+</div>
+
+注意 mi-so-do(E4-G4-C4)从 so 折回低处的 do,轮廓有个大跳——但三个音的身份没变,「家」的感觉也没变。另外,首调唱名与简谱数字本身**不绑定八度**:3-5-1 摆在任何八度上都念 mi-so-do(换到其他调也一样)。首版训练关卡把每组固定在一个八度位置内,先安心建立组感,八度自由是后面的事。
+
+L1 关练的就是这一组:谱面或声音给出 do-mi-so 的某个排列,你选出它的简谱数字与唱名。
+
+## 四、第二组 la-so-mi(6-5-3):儿歌的第一把钥匙
+
+la-so-mi 来自 **Kodály 教学法**——匈牙利作曲家柯达伊·佐尔坦发展的音乐教育体系,全世界儿童音乐启蒙的主流方法之一。它的考证结论很有意思:儿童最容易唱准的第一个音程是**小三度 so-mi**(sol-mi,就是「3-5」下行),操场童谣《Rain, Rain, Go Away》几乎全由 so-mi 两个音构成;在此基础上加一个 la,就得到 la-so-mi(6-5-3)——儿歌旋律里出镜率极高的下行音组。
+
+<ScoreExample
+  notes={[
+    { midi: 69, duration: "q" },
+    { midi: 67, duration: "q" },
+    { midi: 64, duration: "q" },
+  ]}
+  clef="treble"
+  timeSignature={null}
+  width={360}
+  className="mx-auto"
+/>
+
+<div className="not-prose my-4 flex justify-center">
+  <PlayMelodyButton midis={[69, 67, 64]} label="▶ 听:la-so-mi(6-5-3)" />
+</div>
+
+注意这一组的特征形态是**下行**:la 在 do 的上方(A4),so-mi 顺势落下来。听的时候感受这个「往下叹气」的轮廓——很多儿歌的句尾就是它。
+
+L2 关练这一组的全部六个排列(la-so-mi、la-mi-so、so-la-mi、so-mi-la、mi-la-so、mi-so-la)。
+
+## 五、第三组 la-do-mi(6-1-3):小调的「家」
+
+大调有家,小调也有家。**a 小调**是 C 大调的关系小调——同样一批白键、同样无升降号,但「家」搬到了 A 上:a 小调主三和弦是 A-C-E,用首调唱名读作 **la-do-mi(6-1-3)**。
+
+先看 a 小调音阶。首调体系里小调唱作 **la-based minor**:自然小调音阶从主音 la 唱起——la、ti、do、re、mi、fa、so、la,一个升降号都不需要:
+
+<ScoreExample
+  notes={[
+    { midi: 57, duration: "8" },
+    { midi: 59, duration: "8" },
+    { midi: 60, duration: "8" },
+    { midi: 62, duration: "8" },
+    { midi: 64, duration: "8" },
+    { midi: 65, duration: "8" },
+    { midi: 67, duration: "8" },
+    { midi: 69, duration: "8" },
+  ]}
+  clef="treble"
+  timeSignature="4/4"
+  width={460}
+  className="mx-auto"
+/>
+
+<div className="not-prose my-4 flex justify-center">
+  <PlayMelodyButton midis={[57, 59, 60, 62, 64, 65, 67, 69]} label="▶ 听:a 小调音阶(la-ti-do-re-mi-fa-so-la)" noteGapSeconds={0.4} />
+</div>
+
+再看这一组的谱面。A3 在高音谱**下加二线**——地标音关卡练过的加线知识正好用上:
+
+<ScoreExample
+  notes={[
+    { midi: 57, duration: "q" },
+    { midi: 60, duration: "q" },
+    { midi: 64, duration: "q" },
+  ]}
+  clef="treble"
+  timeSignature={null}
+  width={360}
+  className="mx-auto"
+/>
+
+<div className="not-prose my-4 flex flex-wrap justify-center gap-3">
+  <PlayMelodyButton midis={[57, 60, 64]} label="▶ la-do-mi(小调的家)" />
+  <PlayMelodyButton midis={[60, 64, 67]} label="▶ do-mi-so(大调的家)" />
+</div>
+
+把两个「家」连着听:大调的 do-mi-so 明亮,小调的 la-do-mi 柔和——这是你已经弹过的 C 大三和弦与 A 小三和弦,现在用唱名把它们的功能听出来了。
+
+还有一个值得停一秒的细节:第四组里的 la 是 **A4**(do 上方),这一组的 la 是 **A3**(do 下方)。同一个唱名、同一个数字 6,为什么两个位置?因为**la 跟着调走**:C 大调语境里 la 是音阶第六级(do 上方的 A);a 小调里 la 是主音(基准音,取 do 下方更顺手的 A)。首调唱名与简谱记录的是「音级功能」,本来就不绑定具体八度——这正是它和音名思维最大的区别。
+
+L3 关练这一组,也是三组里唯一用 a 小调的一关。
+
+## 六、简谱对照总览:三向翻译
+
+把三组放在一张表里——**五线谱 ↔ 唱名 ↔ 简谱 ↔ 音名**四向对照,每行都可以点开听:
+
+<JianpuMapping />
+
+一句话总结这张表:简谱数字串就是唱名串的数字书写,唱名串就是五线谱上那三个音符的「功能读法」。看到 1-3-5,嘴里唱 do-mi-so,手上是 C-E-G——三条通道通向同一组音,互相印证。这就是中文学习者独有的迁移红利:你不需要「学一套新系统」,只需要把已有的简谱直觉**接到五线谱上**。
+
+## 七、听音环节:先听,再看,再弹
+
+老规矩,声音先行(sound before symbol)。建议按这个三步练:
+
+1. **听组唱组**:点开下面的按钮,闭眼听,跟着唱出数字或唱名(「1-3-5」或「do-mi-so」),再睁眼对照谱例验证;
+2. **看谱默唱**:看着谱例先在心里唱,再点开听实际声音,确认内心听到的和琴声一致;
+3. **上手迁移**:在虚拟钢琴或真琴上把每组弹出来——L5 关卡考的就是这一步。
+
+<div className="not-prose my-4 flex flex-wrap justify-center gap-2">
+  <PlayMelodyButton midis={[60, 64, 67]} label="▶ do-mi-so" />
+  <PlayMelodyButton midis={[67, 64, 60]} label="▶ so-mi-do" />
+  <PlayMelodyButton midis={[69, 67, 64]} label="▶ la-so-mi" />
+  <PlayMelodyButton midis={[64, 67, 69]} label="▶ mi-so-la" />
+  <PlayMelodyButton midis={[57, 60, 64]} label="▶ la-do-mi" />
+  <PlayMelodyButton midis={[64, 60, 57]} label="▶ mi-do-la" />
+</div>
+
+## 八、首调的边界:它不是万能的
+
+诚实交代这套读法的适用范围:
+
+- **转调频繁或无调性的音乐**里,「do 在哪」本身一直在变,首调反而添乱——这时固定调(do 永远 = C)或音名思维更合适;
+- 中国**专业院校**的视唱练耳以固定调为主流;但**业余大众与简谱传统**是首调的天下。本产品面向初学者,首调是迁移红利最大的选择;
+- 首版只在 C 大调 / a 小调两个「家」里活动。首调最大的威力——**同一手型平移到任何调**(G 大调里 1-3-5 = G-B-D)——留待后续迭代。
+
+## 配套练习
+
+学完教程,到左侧课程树里依次完成本技巧的五个关卡。前四关是**识别关**(快答类:每轮 12 题、正确率 ≥90% 且中位响应 ≤3 秒),最后一关是**弹奏关**(每轮 8 题、正确率 ≥85%):
+
+- **L1 do-mi-so(1-3-5)**——大调「家」的全部六个排列;
+- **L2 la-so-mi(6-5-3)**——Kodály 基础音集;
+- **L3 la-do-mi(6-1-3 · a 小调)**——小调「家」;
+- **L4 三音组混合识别**——三组打散混合,干扰项跨组出现(比如 3-5-1 和 3-5-6 放一起,逼你真的读懂而不是猜);
+- **L5 三音组键盘弹奏**——看谱按顺序把三音组弹出来,弹奏类口径。
+
+识别关有两种题型,都是四选一(A–D):**看谱选唱名**(谱面给出音组,选出简谱数字串)与**听音选谱面**(声音给出音组,从四个谱面里选出听到的那个)。所有题目**出题瞬间都会发声**,你可以完全凭耳朵作答——这是预期行为,不是作弊;「▶ 再听一遍」随时可用。
+
+弹奏关的玩法与五指三和弦关相同:在虚拟钢琴上**按谱面顺序逐键点按**(接了 MIDI 真琴就直接弹),每按一键显示在上方收集区,**弹满 3 个音自动提交**;按错顺序或按错音会判错,可以点「↺ 重按」清空重来(提交前)。
+
+五关全部通过,支线毕业。此时你的主线进度不受任何影响——方向音程、节奏、五指三和弦关卡仍按主线顺序推进,这条支线只是并行拓展了你的唱名读谱能力。
