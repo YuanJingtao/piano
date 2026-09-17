@@ -9,7 +9,10 @@
  */
 import { registerTechnique } from "@/domain/registry";
 import landmarkNotesPlugin from "./landmark-notes";
+import rhythmReadingPlugin from "./rhythm-reading";
 
 registerTechnique(landmarkNotesPlugin);
-// 主线其余技巧落地后在此追加（#39 键盘地理 / #40 方向与音程 / #41 节奏 / #42 五指位置）：
+registerTechnique(rhythmReadingPlugin);
+// 主线其余技巧落地后在此追加（#39 键盘地理 / #40 方向与音程 / #42 五指位置）：
 // registerTechnique(keyboardGeographyPlugin); ...
+// 教学顺序 = 注册顺序；#39/#40 合入时按主线顺序调整注册位置（键盘地理 → 地标音 → 方向音程 → 节奏）。

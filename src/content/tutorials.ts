@@ -1,6 +1,7 @@
 import type { ComponentType } from "react";
 
 import LandmarkNotesTutorial from "@/plugins/landmark-notes/tutorial.mdx";
+import RhythmReadingTutorial from "@/plugins/rhythm-reading/tutorial.mdx";
 
 /**
  * 教程页注册表（内容层）：技巧 id → MDX 教程组件，每技巧一行（ADR 0007 口径）。
@@ -12,4 +13,5 @@ import LandmarkNotesTutorial from "@/plugins/landmark-notes/tutorial.mdx";
  */
 export const tutorials: Record<string, ComponentType> = {
   "landmark-notes": LandmarkNotesTutorial,
+  "rhythm-reading": RhythmReadingTutorial,
 };

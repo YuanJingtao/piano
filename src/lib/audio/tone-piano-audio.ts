@@ -13,7 +13,7 @@ import type { PianoAudio, PianoAudioPlayOptions } from "./types";
 
 type ToneModule = typeof import("tone");
 type Sampler = import("tone").Sampler;
-type Synth = import("tone").Synth;
+type PolySynth = import("tone").PolySynth;
 
 /** 占位采样映射：键名 = 音名（Sampler 以此变调补齐其余键位）。 */
 const PLACEHOLDER_SAMPLE_URLS: Record<string, string> = {
@@ -46,7 +46,7 @@ function withDefaults(options?: PianoAudioPlayOptions) {
 export class TonePianoAudio implements PianoAudio {
   private tone: ToneModule | null = null;
   private sampler: Sampler | null = null;
-  private clickSynth: Synth | null = null;
+  private clickSynth: PolySynth | null = null;
   private startPromise: Promise<void> | null = null;
 
   get ready(): boolean {
@@ -66,7 +66,12 @@ export class TonePianoAudio implements PianoAudio {
 
     // 频率不在构造项内：每次 triggerAttackRelease 以 note 参数传入固定频率
     // （短促包络下无可感音高，满足「无音高」约定）。
-    this.clickSynth = new tone.Synth({
+    //
+    // 用 PolySynth 而非单音 Synth：一串点击声在同一时刻并发触发（多音符节奏型），
+    // 且出题即发声的 effect 在 StrictMode 下会双触发、用户「再听一遍」可能与上一串
+    // 未播完的点击声重叠——单音 Synth 的振荡器复用会抛「Start time must be strictly
+    // greater than previous start time」。PolySynth 每次触发分配独立 voice，天然免疫。
+    this.clickSynth = new tone.PolySynth(tone.Synth, {
       oscillator: { type: "square" },
       envelope: { attack: 0.001, decay: 0.04, sustain: 0, release: 0.01 },
       volume: -10,

@@ -1,6 +1,10 @@
 import type { ComponentType } from "react";
 
 import LandmarkNoteStage from "@/plugins/landmark-notes/stage";
+import {
+  RhythmEarQuizStage,
+  RhythmSyllableQuizStage,
+} from "@/plugins/rhythm-reading/stage";
 
 import type { QuestionStageProps } from "./types";
 
@@ -11,7 +15,9 @@ import type { QuestionStageProps } from "./types";
  */
 const QUESTION_STAGES: Readonly<Record<string, ComponentType<QuestionStageProps>>> = {
   "landmark-note": LandmarkNoteStage,
-  // 后续技巧题型落地后在此追加（#39 键盘地理 / #40 方向与音程 / #41 节奏选择 …）
+  "rhythm-syllable-quiz": RhythmSyllableQuizStage,
+  "rhythm-ear-quiz": RhythmEarQuizStage,
+  // 后续技巧题型落地后在此追加（#39 键盘地理 / #40 方向与音程 …）
 };
 
 export function getQuestionStage(questionType: string): ComponentType<QuestionStageProps> {
