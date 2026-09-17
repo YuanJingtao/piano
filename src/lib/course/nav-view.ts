@@ -49,6 +49,7 @@ export async function loadCourseNav(): Promise<CourseNavData> {
         title: lvl.title ?? lvl.id,
         unlocked: lvl.unlocked,
         passed: lvl.passed,
+        best: lvl.best,
       })),
     };
   });

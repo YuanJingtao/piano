@@ -30,7 +30,7 @@ export type RoundConfig = {
  * ```ts
  * const round = new Round({ level, plugin, mistakePool });
  * for (let q = round.next(); q; q = round.next()) {
- *   // 浏览器层：plugin.render(q.question) → plugin.interact() →
+ *   // 浏览器层（React 题面组件渲染题目 + 收集作答，#38 定形）：
  *   //   round.submit(answer)；限时模式超时 → round.timeout()
  * }
  * const result = round.settle();
@@ -100,6 +100,15 @@ export class Round {
       timedOut: true,
     });
     this.current = undefined;
+  }
+
+  /**
+   * 最近一次 submit/timeout 记录的响应毫秒（行内反馈展示用，与落库值同源）；
+   * 尚无记录时返回 undefined。当前题签发后、提交前调用返回的是上一题的值，
+   * 消费方应紧跟 submit 之后读取。
+   */
+  lastResponseMs(): number | undefined {
+    return this.records.at(-1)?.responseMs;
   }
 
   /** 轮次是否已满员且当前题已结（可 settle）。 */

@@ -59,12 +59,6 @@ describe("示例插件 × 静态注册表", () => {
     expect(plugin.judge(q, { kind: "choice", choiceId: "60", timestamp: 0 }).ok).toBe(false);
   });
 
-  it("浏览器层两件在纯 TS seam 中调用即抛（防误用）", () => {
-    const plugin = getTechnique("example");
-    expect(() => plugin.render({ type: "note", midi: 60 })).toThrow(/浏览器层/);
-    return expect(plugin.interact()).rejects.toThrow(/浏览器层/);
-  });
-
   it("整轮模拟：L1 快答 12 题全对 → 结算通过、错题池空", () => {
     const plugin = getTechnique("example");
     const level = plugin.manifest.levels[0]; // L1 三音快答：12 题 / ≥90% / ≤3s

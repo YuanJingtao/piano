@@ -6,7 +6,7 @@
  * （可序列化视图模型 nav-types.ts）；本组件只做展示与交互
  * （当前技巧高亮、关卡列表展开/收起）。
  *
- * 关卡行在 #37 为状态展示（训练入口 #38 接入后成为练习链接）。
+ * 关卡行 = 练习入口链接（#38 训练闭环）：已解锁关卡链到练习页，未解锁为纯展示。
  */
 
 import Link from "next/link";
@@ -32,11 +32,13 @@ function TechniqueBlock({
   active,
   expanded,
   onToggle,
+  pathname,
 }: {
   technique: CourseNavTechnique;
   active: boolean;
   expanded: boolean;
   onToggle: () => void;
+  pathname: string;
 }) {
   const passedCount = technique.levels.filter((l) => l.passed).length;
 
@@ -100,27 +102,46 @@ function TechniqueBlock({
 
       {technique.unlocked && expanded && (
         <ul className="mt-0.5 space-y-0.5 border-l border-neutral-200 pb-1 pl-3 ml-4">
-          {technique.levels.map((level) => (
-            <li
-              key={level.id}
-              className="flex items-center gap-2 rounded px-2 py-1 text-sm text-neutral-600"
-            >
-              <span aria-hidden className={`h-2 w-2 shrink-0 rounded-full ${levelDotClass(level)}`} />
-              <span className="flex-1 truncate">
-                {level.id} · {level.title}
-              </span>
-              {level.passed && (
-                <span className="text-xs text-emerald-600" aria-label="已通过">
-                  ✓
+          {technique.levels.map((level) => {
+            const href = `/techniques/${technique.id}/levels/${level.id}`;
+            const active = pathname === href;
+            const rowClass = `flex items-center gap-2 rounded px-2 py-1 text-sm ${
+              active ? "bg-amber-50 font-medium text-amber-900" : "text-neutral-600"
+            }`;
+            const content = (
+              <>
+                <span aria-hidden className={`h-2 w-2 shrink-0 rounded-full ${levelDotClass(level)}`} />
+                <span className="flex-1 truncate">
+                  {level.id} · {level.title}
                 </span>
-              )}
-              {!level.passed && !level.unlocked && (
-                <span className="text-xs text-neutral-300" aria-label="未解锁">
-                  🔒
-                </span>
-              )}
-            </li>
-          ))}
+                {level.passed && (
+                  <span className="text-xs text-emerald-600" aria-label="已通过">
+                    ✓
+                  </span>
+                )}
+                {!level.passed && !level.unlocked && (
+                  <span className="text-xs text-neutral-300" aria-label="未解锁">
+                    🔒
+                  </span>
+                )}
+              </>
+            );
+            return (
+              <li key={level.id}>
+                {level.unlocked ? (
+                  <Link
+                    href={href}
+                    aria-current={active ? "page" : undefined}
+                    className={`${rowClass} transition-colors hover:bg-neutral-100 hover:text-neutral-900`}
+                  >
+                    {content}
+                  </Link>
+                ) : (
+                  <span className={rowClass}>{content}</span>
+                )}
+              </li>
+            );
+          })}
         </ul>
       )}
     </li>
@@ -153,6 +174,7 @@ export default function CourseTreeNav({ nav }: { nav: CourseNavData }) {
               active={technique.id === activeTechniqueId}
               expanded={isExpanded(technique.id)}
               onToggle={() => toggle(technique.id)}
+              pathname={pathname}
             />
           ))}
         </ul>

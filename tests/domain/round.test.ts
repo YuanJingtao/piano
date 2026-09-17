@@ -258,4 +258,19 @@ describe("引擎状态机防御", () => {
     expect(result.records[0].responseMs).toBe(250);
     expect(result.records[0].timedOut).toBe(false);
   });
+
+  it("lastResponseMs：与落库记录同源（行内反馈展示用）", () => {
+    const { round, clock } = newRound();
+    expect(round.lastResponseMs()).toBeUndefined(); // 尚无记录
+    round.next();
+    clock.advance(320);
+    round.submit({ kind: "choice", choiceId: "correct", timestamp: clock.now() });
+    expect(round.lastResponseMs()).toBe(320);
+    round.next();
+    clock.advance(180);
+    round.submit({ kind: "choice", choiceId: "correct", timestamp: clock.now() });
+    expect(round.lastResponseMs()).toBe(180); // 跟随最近一次 submit
+    const result = playFullRound(round, clock);
+    expect(result.records[1].responseMs).toBe(180);
+  });
 });

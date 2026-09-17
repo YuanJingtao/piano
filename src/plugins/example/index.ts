@@ -10,9 +10,9 @@ import type {
 /**
  * 内存示例插件（#34 验收用）：看谱回声——出示一个音，用琴键弹回同一音。
  *
- * 存在的意义是示范插件契约与注册表加载链路：
- * - 纯逻辑两件（samplePool / judge）为真实实现，可被单测；
- * - 浏览器两件（render / interact）不属于 seam 1，调用即抛，防止误用。
+ * 存在的意义是示范插件契约与注册表加载链路：纯逻辑两件（samplePool / judge）
+ * 为真实实现，可被单测；浏览器两件落为插件目录的 stage.tsx React 题面组件
+ * （#38 定形；本示例不进生产注册表，无 stage）。
  *
  * 真实技巧插件（#37 起）按同样形状落在 src/plugins/<id>/ 并在注册表加一行。
  */
@@ -56,16 +56,6 @@ export const examplePlugin: TechniquePlugin = {
   samplePool(level: LevelDef): Question[] {
     const spec = level.pool as NotePoolSpec;
     return spec.midis.map(note);
-  },
-
-  render(): void {
-    throw new Error("example plugin: render 属浏览器层，纯 TS seam 不覆盖");
-  },
-
-  interact(): Promise<AnswerEvent> {
-    return Promise.reject(
-      new Error("example plugin: interact 属浏览器层，纯 TS seam 不覆盖"),
-    );
   },
 
   judge(q: Question, a: AnswerEvent): Judgement {

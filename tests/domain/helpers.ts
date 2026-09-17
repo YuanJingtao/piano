@@ -1,11 +1,5 @@
 import { Round } from "@/domain/round";
-import type {
-  AnswerEvent,
-  LevelDef,
-  Question,
-  RoundResult,
-  TechniquePlugin,
-} from "@/domain/types";
+import type { LevelDef, Question, RoundResult, TechniquePlugin } from "@/domain/types";
 
 /** 可控时钟：Round 的 now() 注入点，逐题推进以制造确定的 responseMs。 */
 export class FakeClock {
@@ -63,12 +57,6 @@ export function makeStubPlugin(levels: LevelDef[] = []): TechniquePlugin {
     samplePool(level) {
       const spec = level.pool as { midis: number[] };
       return spec.midis.map((midi, i) => ({ type: "stub", i, midi }));
-    },
-    render() {
-      /* 纯逻辑 seam 不涉及 */
-    },
-    interact(): Promise<AnswerEvent> {
-      return Promise.reject(new Error("stub: interact 不应在纯 TS 测试中被调用"));
     },
     judge(_q, a) {
       const ok = a.kind === "choice" && a.choiceId === "correct";

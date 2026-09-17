@@ -17,8 +17,9 @@ import { LANDMARK_BY_ID, landmarkByMidi, type Clef, type LandmarkId } from "./la
  * 四个关卡全部为快答关卡（12 题 / 正确率 ≥90% / 中位响应 ≤3s，ADR 0001）；
  * 关卡按教学子步骤递进：中央 C → G/F 镜像 → 高低 C 外扩 → 五地标混合。
  *
- * 纯逻辑两件（samplePool / judge）为真实实现（seam 2 单测覆盖）；
- * 浏览器两件（render / interact）在 #38 训练闭环接入 PracticeStage 前调用即抛。
+ * 纯逻辑两件（samplePool / judge）在本文件（seam 2 单测覆盖）；
+ * 浏览器两件（题目渲染 + 琴键作答交互）落为 ./stage.tsx 的 React 题面组件
+ * （#38 训练闭环定形，按题型注册于 src/components/training/question-stages.tsx）。
  */
 
 /** 题目：谱面上的地标音。midi 为音高唯一真源，clef 决定呈现谱表。 */
@@ -98,16 +99,6 @@ export const landmarkNotesPlugin: TechniquePlugin = {
       }
     }
     return questions;
-  },
-
-  render(): void {
-    throw new Error("landmark-notes: render 属浏览器层，#38 训练闭环接入 PracticeStage");
-  },
-
-  interact(): Promise<AnswerEvent> {
-    return Promise.reject(
-      new Error("landmark-notes: interact 属浏览器层，#38 训练闭环接入 PracticeStage"),
-    );
   },
 
   judge(q: Question, a: AnswerEvent): Judgement {

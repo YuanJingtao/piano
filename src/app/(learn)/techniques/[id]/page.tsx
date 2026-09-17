@@ -71,6 +71,69 @@ export default async function TechniqueTutorialPage({ params }: PageProps) {
       ) : (
         <p className="text-neutral-600">教程页编写中。</p>
       )}
+
+      <LevelPracticeList technique={technique} />
     </div>
+  );
+}
+
+/**
+ * 教程页底部的关卡练习入口（#38）：读毕即练，教科书式「课后练习」形态。
+ * 状态来自 loadCourseNav（LevelProgress 查询时派生）；点击进入关卡练习页，
+ * 「开始」按钮在练习页内完成音频解锁（同一手势，AC1）。
+ */
+function LevelPracticeList({ technique }: { technique: CourseNavTechnique }) {
+  return (
+    <section aria-labelledby="level-practice-heading" className="mt-12 border-t border-neutral-200 pt-8">
+      <h2 id="level-practice-heading" className="text-lg font-semibold tracking-tight">
+        关卡练习
+      </h2>
+      <p className="mt-1 text-sm text-neutral-500">
+        按顺序通过全部关卡即可毕业本技巧、解锁后续内容；已通过的关卡可随时复习。
+      </p>
+      <ul className="mt-4 space-y-2">
+        {technique.levels.map((level) => {
+          const href = `/techniques/${technique.id}/levels/${level.id}`;
+          if (!level.unlocked) {
+            return (
+              <li
+                key={level.id}
+                className="flex items-center gap-3 rounded-md border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm text-neutral-400"
+              >
+                <span aria-hidden>🔒</span>
+                <span className="font-medium">
+                  {level.id} · {level.title}
+                </span>
+                <span className="ml-auto text-xs">通过上一关后解锁</span>
+              </li>
+            );
+          }
+          return (
+            <li key={level.id}>
+              <Link
+                href={href}
+                className="flex items-center gap-3 rounded-md border border-neutral-200 bg-white px-4 py-3 text-sm shadow-sm transition-colors hover:border-amber-300 hover:bg-amber-50"
+              >
+                <span className="font-medium text-neutral-900">
+                  {level.id} · {level.title}
+                </span>
+                {level.passed && level.best && (
+                  <span className="text-xs tabular-nums text-emerald-700">
+                    ✓ 已通过 · 最佳 {level.best.correctCount}/{level.best.questionCount} · 中位{" "}
+                    {level.best.medianResponseMs}ms
+                  </span>
+                )}
+                {level.passed && !level.best && (
+                  <span className="text-xs text-emerald-700">✓ 已通过</span>
+                )}
+                <span className="ml-auto text-xs font-medium text-amber-700">
+                  {level.passed ? "复习 →" : "开始练习 →"}
+                </span>
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
   );
 }

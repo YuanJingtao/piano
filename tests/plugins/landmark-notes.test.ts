@@ -133,10 +133,6 @@ describe("judge：判定与行内反馈", () => {
     expect(() => plugin().judge({ type: "other" }, midiAnswer(60))).toThrow(/unexpected question type/);
   });
 
-  it("浏览器两件在纯 TS seam 中调用即抛（防误用，#38 接入）", () => {
-    expect(() => plugin().render(middleCTreble)).toThrow(/浏览器层/);
-    return expect(plugin().interact()).rejects.toThrow(/浏览器层/);
-  });
 });
 
 describe("整轮模拟（Round 引擎 × 地标音插件）", () => {
