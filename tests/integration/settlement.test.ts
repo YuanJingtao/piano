@@ -210,10 +210,27 @@ integration("轮次结算落库（真实 PostgreSQL，不 mock）", () => {
     expect(Number(count?.["n"])).toBe(5);
   });
 
-  it("GET /api/course-tree：注册表占位期返回 200 + 空树（派生逻辑见 course-tree 测试）", async () => {
-    await postSettlement(makePayload());
+  it("GET /api/course-tree：200 + 注册表技巧入树，结算落库即时反映到派生状态", async () => {
+    // #37 起注册表装载真实技巧（landmark-notes），本用例走通
+    // 结算落库 → 查询期派生（ADR 0006）→ HTTP 视图 的全链路。
+    const settle = await postSettlement(
+      makePayload({ techniqueId: "landmark-notes", levelId: "L1" }),
+    );
+    expect(settle.status).toBe(201);
+
     const { status, body } = await getCourseTreeHttp();
     expect(status).toBe(200);
-    expect(body?.["techniques"]).toEqual([]);
+    const techniques = body?.["techniques"];
+    expect(Array.isArray(techniques)).toBe(true);
+    const landmark = (techniques as Record<string, unknown>[]).find(
+      (t) => t["id"] === "landmark-notes",
+    );
+    expect(landmark).toBeDefined();
+    const levels = landmark?.["levels"] as Record<string, unknown>[];
+    expect(levels).toHaveLength(4);
+    // L1 本轮通过 → passed 且仍解锁（复习）；L2 因 L1 通过而解锁；L3 未解锁
+    expect(levels[0]).toMatchObject({ id: "L1", passed: true, unlocked: true });
+    expect(levels[1]).toMatchObject({ id: "L2", passed: false, unlocked: true });
+    expect(levels[2]).toMatchObject({ id: "L3", passed: false, unlocked: false });
   });
 });

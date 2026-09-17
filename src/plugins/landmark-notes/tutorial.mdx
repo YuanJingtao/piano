@@ -1,0 +1,210 @@
+import { LANDMARKS, LANDMARK_COLORS } from "@/plugins/landmark-notes/landmarks";
+
+# 地标音系统:谱面上的五个「家」
+
+初学识谱最大的坑,是试图把五线谱上每一个位置都背下来——线、间、上加线、下加线,几十个个音位,背了忘、忘了背。主流钢琴教材(Faber Piano Adventures、Piano Safari 等)走的都是另一条路:**不背全部音位,先记住少数几个「地标音」**。
+
+地标音就像地图上的城市:你不需要记住每一条街道,只要知道几个大城市在哪,其他地方都能从它们出发推算。本技巧教你五个地标音——**中央 C、高音 G、低音 F、高音 C、低音 C**。学完它们,高音谱表和低音谱表就各自有了「家」,再陌生的音也能从家出发数出来。
+
+整套方法还有一个意外的好运:**这五个音彼此镜像对称**,记住一个,往往就免费得到了另一个。下面一个一个来。
+
+## 一、中央 C:第一个地标
+
+中央 C(C4)是钢琴世界的「市中心」:它在键盘正中间,也是高音谱表和低音谱表共享的那个音。
+
+**在键盘上找它**:黑键是按「两个一组、三个一组」交替排列的。找到任意一组**两个黑键**,紧挨在它**左边**的白键就是 C。坐在琴凳正中,你鼻尖对着的那个 C 就是中央 C。
+
+**在谱面上找它**:中央 C 恰好坐在高音谱表**下加一线**上(五线谱下面单独加的一小条线),同时也是低音谱表的**上加一线**——同一个音,在两张谱表上互相「探出头」来打招呼:
+
+<ScoreExample
+  staves={[
+    {
+      clef: "treble",
+      notes: [
+        { midi: 60, duration: "w", color: LANDMARK_COLORS["middle-c"], label: "中央 C" },
+      ],
+    },
+    {
+      clef: "bass",
+      notes: [
+        { midi: 60, duration: "w", color: LANDMARK_COLORS["middle-c"], label: "中央 C" },
+      ],
+    },
+  ]}
+  brace
+  width={420}
+  className="mx-auto"
+/>
+
+<KeyboardDiagram
+  highlights={[{ midi: 60, color: LANDMARK_COLORS["middle-c"], label: "中央 C" }]}
+/>
+
+先听再看,声音先行——点下面的按钮,记住中央 C 的样子和声音:
+
+<PlayNoteButton midi={60} label="▶ 听中央 C(C4)" durationSeconds={1.5} />
+
+## 二、高音 G:G 谱号的家
+
+你天天见的「高音谱号」,其实是一个**花体的字母 G**。它螺旋的中心正好环绕住五线谱**从下往上数第二条线**——这条线就是高音 G(G4)。换句话说,**G 谱号自己就指着自己的家**:看到高音谱号,你就已经找到了 G。
+
+<ScoreExample
+  notes={[{ midi: 67, duration: "w", color: LANDMARK_COLORS["treble-g"], label: "高音 G" }]}
+  clef="treble"
+  width={420}
+  className="mx-auto"
+/>
+
+<PlayNoteButton midi={67} label="▶ 听高音 G(G4)" durationSeconds={1.5} />
+
+## 三、低音 F:F 谱号的家
+
+同样的故事发生在低音谱表:**低音谱号是一个花体的字母 F**,它右边的两个小点一上一下,正好**夹住第四条线**——这条线就是低音 F(F3)。两个点像手指一样指着它:F 谱号的家,就在两点之间。
+
+<ScoreExample
+  notes={[{ midi: 53, duration: "w", color: LANDMARK_COLORS["bass-f"], label: "低音 F" }]}
+  clef="bass"
+  width={420}
+  className="mx-auto"
+/>
+
+<PlayNoteButton midi={53} label="▶ 听低音 F(F3)" durationSeconds={1.5} />
+
+## 四、镜像对称:G 与 F 隔着中央 C 相望
+
+现在把高音 G 和低音 F 放到一起看,会发现一个漂亮的对称:
+
+- 从中央 C 沿白键**往上数 5 步**,到高音 G;
+- 从中央 C 沿白键**往下数 5 步**,到低音 F;
+- 谱面上,高音 G 是高音谱表**自下而上第二条线**(G 谱号环绕),低音 F 是低音谱表**自上而下第二条线**(F 谱号两点夹住)。
+
+一上一下、距离相等——**它们隔着中央 C 照镜子**。记住这个对称,两张谱表就同时有了家:学会一个,另一个免费奉送。这也是为什么谱号本身就叫 G 谱号和 F 谱号——它们各自锚定了一个地标。
+
+<ScoreExample
+  staves={[
+    {
+      clef: "treble",
+      notes: [
+        { midi: 60, duration: "w", color: LANDMARK_COLORS["middle-c"], label: "中央 C" },
+        { midi: 67, duration: "w", color: LANDMARK_COLORS["treble-g"], label: "高音 G" },
+      ],
+    },
+    {
+      clef: "bass",
+      notes: [
+        { midi: 53, duration: "w", color: LANDMARK_COLORS["bass-f"], label: "低音 F" },
+        { midi: 60, duration: "w", color: LANDMARK_COLORS["middle-c"], label: "中央 C" },
+      ],
+    },
+  ]}
+  brace
+  width={420}
+  className="mx-auto"
+/>
+
+<KeyboardDiagram
+  highlights={[
+    { midi: 60, color: LANDMARK_COLORS["middle-c"], label: "中央 C" },
+    { midi: 67, color: LANDMARK_COLORS["treble-g"], label: "高音 G" },
+    { midi: 53, color: LANDMARK_COLORS["bass-f"], label: "低音 F" },
+  ]}
+/>
+
+分开听一听这对镜像:
+
+<div className="not-prose flex flex-wrap gap-3 my-4">
+  <PlayNoteButton midi={67} label="▶ 高音 G" durationSeconds={1.5} />
+  <PlayNoteButton midi={60} label="▶ 中央 C" durationSeconds={1.5} />
+  <PlayNoteButton midi={53} label="▶ 低音 F" durationSeconds={1.5} />
+</div>
+
+## 五、向外扩展:高音 C 与低音 C
+
+有了中央 C 这个市中心,再向外走一个八度,就得到最后两个地标:
+
+- **高音 C(C5)**:中央 C 往上数 8 个白键(一个八度),在高音谱表的**第三间**;
+- **低音 C(C3)**:中央 C 往下一个八度,在低音谱表的**第二间**。
+
+它们同样是一对镜像——一个在中央 C 上方八度,一个在下方八度。至此,五个地标把常用音域的两端和中心全部锚定:
+
+<ScoreExample
+  staves={[
+    {
+      clef: "treble",
+      notes: [
+        { midi: 60, duration: "w", color: LANDMARK_COLORS["middle-c"], label: "中央 C" },
+        { midi: 72, duration: "w", color: LANDMARK_COLORS["treble-c"], label: "高音 C" },
+      ],
+    },
+    {
+      clef: "bass",
+      notes: [
+        { midi: 48, duration: "w", color: LANDMARK_COLORS["bass-c"], label: "低音 C" },
+        { midi: 60, duration: "w", color: LANDMARK_COLORS["middle-c"], label: "中央 C" },
+      ],
+    },
+  ]}
+  brace
+  width={420}
+  className="mx-auto"
+/>
+
+<KeyboardDiagram
+  highlights={LANDMARKS.map((l) => ({ midi: l.midi, color: l.color, label: l.name }))}
+/>
+
+## 地标音总表
+
+五个地标音全部到齐。这张表值得贴在琴边:
+
+<table>
+  <thead>
+    <tr>
+      <th>地标音</th>
+      <th>音名</th>
+      <th>谱上位置</th>
+      <th>听一听</th>
+    </tr>
+  </thead>
+  <tbody>
+    {LANDMARKS.map((l) => (
+      <tr key={l.id}>
+        <td>
+          <span style={{ color: l.color, fontWeight: 600 }}>{l.name}</span>
+        </td>
+        <td>{l.noteName}</td>
+        <td>{l.staffPosition}</td>
+        <td>
+          <PlayNoteButton midi={l.midi} label="▶" durationSeconds={1.5} />
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+以后在谱上遇到不认识的音,不要慌:**找到离它最近的地标,沿着线或间一格一格数过去**。「数格子」永远比「背音位」可靠——这正是地标音系统的意义。
+
+## 听音环节:先听,后看
+
+识谱的根基是「声音先于符号」:看到一个音位,你脑子里应该先响起它的声音,而不是先背出它的名字。下面是一组听音练习按钮,**建议按这个顺序练**:
+
+1. **盲听定位**:闭上眼睛,点开任意一个地标音,先在脑中想象它在键盘上的位置,再睁眼在上面的键盘总览图里验证;
+2. **镜像对比**:先听高音 G,再听低音 F,体会它们隔着中央 C 的对称——音高一大一小,离中央 C 的距离却一样;
+3. **八度感知**:听中央 C → 高音 C → 低音 C,感受「同一个名字、不同高度」的八度关系。
+
+<div className="not-prose flex flex-wrap gap-3 my-4">
+  {LANDMARKS.map((l) => (
+    <PlayNoteButton key={l.id} midi={l.midi} label={`▶ ${l.name}(${l.noteName})`} durationSeconds={1.5} />
+  ))}
+</div>
+
+## 配套练习
+
+学完教程,到左侧课程树里依次完成本技巧的四个关卡:
+
+- **L1 中央 C**——在高低两张谱表上认出第一个地标;
+- **L2 高音 G / 低音 F 镜像**——加入两个谱号各自的家;
+- **L3 高音 C / 低音 C 外扩**——把锚点扩展到两个八度端点;
+- **L4 五地标混合快答**——五个地标全部混合出题。
+
+每关都是快答关卡:每轮 12 题,正确率达到 90% 且中位响应不超过 3 秒即通过。题目会**出声**——出题瞬间你就能听到目标音高,先靠耳朵、再靠眼睛,这是刻意设计的脚手架,放心用。四关全部通过后,本技巧毕业,主线与支线的下一站都会为你解锁。

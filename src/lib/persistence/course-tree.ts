@@ -1,4 +1,6 @@
+import { listTechniques } from "@/domain/registry";
 import type { Sql } from "@/lib/db";
+import "@/plugins"; // 静态注册副作用（ADR 0007）：import 后注册表即含全部产品技巧
 import {
   DEFAULT_USER_ID,
   type BestScore,
@@ -10,12 +12,13 @@ import { asBoolean, asString } from "./narrow";
 import { bestFromRow } from "./settlement";
 
 /**
- * 占位注册表：技巧 manifest 的 truth 在 #34 的静态注册表（代码级插件目录），
- * 本分支与其并行开发、尚不可依赖，故此处为空数组；
- * 训练闭环集成（#38）时以注册表的 TechniqueManifest[] 直连 getCourseTree
- * （结构类型兼容，零转换）。集成测试直接注入 fixture manifest 验证派生逻辑。
+ * 课程树数据源 = #34 静态注册表的技巧 manifest（#37 接线，兑现 #35 的零转换承诺：
+ * TechniqueManifest 结构上满足 CourseTechnique，多出的字段自动兼容）。
+ * 集成测试直接注入 fixture manifest 验证派生逻辑，不经此函数。
  */
-export const courseRegistry: readonly CourseTechnique[] = [];
+export function registeredTechniques(): readonly CourseTechnique[] {
+  return listTechniques().map((p) => p.manifest);
+}
 
 /** LevelProgress 单行事实：某关卡的通过状态与最佳成绩快照。 */
 export type LevelProgressRecord = {
@@ -86,7 +89,7 @@ export function deriveCourseTree(
 /** 从 DB 读 LevelProgress 并按 manifest 派生课程树（查询时派生，不落库）。 */
 export async function getCourseTree(
   sql: Sql,
-  techniques: readonly CourseTechnique[] = courseRegistry,
+  techniques: readonly CourseTechnique[] = registeredTechniques(),
   userId: string = DEFAULT_USER_ID,
 ): Promise<CourseTreeTechniqueState[]> {
   const rows: unknown = await sql`
