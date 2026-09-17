@@ -8,6 +8,26 @@ on:
 jobs:
   verify:
     runs-on: ubuntu-latest
+
+    # seam 3 集成测试：真实 PostgreSQL service 容器（不 mock），#33 决议到本工单接入
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: piano
+          POSTGRES_PASSWORD: piano
+          POSTGRES_DB: piano
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U piano -d piano"
+          --health-interval 2s
+          --health-timeout 3s
+          --health-retries 20
+
+    env:
+      DATABASE_URL: postgres://piano:piano@localhost:5432/piano
+
     steps:
       - uses: actions/checkout@v4
 
