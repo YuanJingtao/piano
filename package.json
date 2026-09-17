@@ -14,7 +14,9 @@
     "next": "^15.5.0",
     "postgres": "^3.4.5",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "tone": "^15.1.22",
+    "vexflow": "^5.0.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.0",
