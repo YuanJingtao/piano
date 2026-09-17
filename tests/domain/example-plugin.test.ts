@@ -1,9 +1,14 @@
-import { describe, expect, it } from "vitest";
-import "@/plugins"; // 触发静态注册（新增技巧 = 注册表一行）
+import { beforeEach, describe, expect, it } from "vitest";
 import { Round } from "@/domain/round";
-import { getTechnique, listTechniques } from "@/domain/registry";
+import {
+  __clearRegistryForTests,
+  getTechnique,
+  listTechniques,
+  registerTechnique,
+} from "@/domain/registry";
 import { questionKey } from "@/domain/sampling";
 import type { AnswerEvent, Question } from "@/domain/types";
+import examplePlugin from "@/plugins/example";
 import { FakeClock, hasAdjacentDuplicates } from "./helpers";
 
 /** 从示例插件题目中安全取出目标 MIDI（判别 type 后收窄，不用不安全断言）。 */
@@ -16,9 +21,16 @@ function midiOf(q: Question): number {
 
 /**
  * #34 验收：内存示例插件经注册表加载，跑通整轮模拟（出题→作答→结算）。
+ * 示例插件是验收演示、不进生产注册表（src/plugins/index.ts 只注册产品技巧，
+ * 课程树从注册表枚举渲染），故此处显式注册。生产注册链路由 landmark-notes.test.ts 验证。
  */
 describe("示例插件 × 静态注册表", () => {
-  it("经注册表加载：import '@/plugins' 后可按 id 取到示例插件", () => {
+  beforeEach(() => {
+    __clearRegistryForTests();
+    registerTechnique(examplePlugin);
+  });
+
+  it("经注册表加载：registerTechnique 后可按 id 取到示例插件", () => {
     const plugin = getTechnique("example");
     expect(plugin.manifest.id).toBe("example");
     expect(listTechniques().map((p) => p.manifest.id)).toContain("example");
